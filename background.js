@@ -129,107 +129,145 @@ class Rain {
 }
 */
 
-class Cloud {
-    height = 50;
-    width = 10;
-    position = {
-        x: 0,
-        y: 0
-    };
-
-    constructor(cellSize = 0) {
-        if(cellSize === 0) {
-            throw new Error('Cell size must be set for clouds');
-        }
-
-        this.cellSize = cellSize;
-    }
-
-    // Draw the cloud
-    draw(context) {
-        context.fillStyle = "rgba(255, 255, 255)";
-    
-        for (let i = 0; i < this.height; i++) {
-            for (let j = 0; j < this.width; j++) {
-                const x = i * this.cellSize;
-                const y = j * this.cellSize;
-
-                context.fillRect(
-                    x,
-                    y,
-                    this.cellSize,
-                    this.cellSize
-                 );
-            }
-        }
-    }
-}
-
-
 class Clouds {
-    // constructor(cellSize, maxWidth = 5, maxHeight = 2) {
-    constructor(cellSize) {
+    constructor(cellSize, context, element, paddingRange = { min: 1, max: 5 }) {
         this.cellSize = cellSize;
+        this.context = context;
+        this.element = element;
+        this.paddingRange = paddingRange;
 
-        this.clouds = [new Cloud(this.cellSize)];
-        
-        // this.maxWidth = maxWidth;
-        // this.maxHeight = maxHeight;
-        // this.moveInterval = 500; // Default move interval for clouds
+        this.clouds = [];
+        this.rows = Math.floor(this.element.height / this.cellSize);
+        this.cols = Math.floor(this.element.width / this.cellSize);
+        this.velocity = 0.05;
+
+        this.lastUpdate = 0; // timestamp in ms
+        this.stepInterval = 1000; // 1 second in ms
+
+        this.prefabs = [
+            [[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0], [0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0], [0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0], [0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0], [0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1], [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1], [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0]],
+            [[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0], [0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1], [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0], [0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0]],
+            [[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0], [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]],
+            [[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0],[0,0,1,1,1,1,1,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0],[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1,1,1,0,0],[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0],[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],[0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0]],
+            [[0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0],[0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0],[0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0],[0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0],[0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0],[0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0]],
+            [[0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0],[0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0],[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],[0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0],[0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0]],
+            [[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,1,1,1,1,1,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,1,1,1,1,1,1,1,1,1,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0],[0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0],[0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0],[0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0],[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0],[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],[0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0],[0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]],
+            [[0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,0,0,0],[0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,0,0],[0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,0,0],[0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0],[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0],[0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]],
+            [[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0],[0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0],[0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0],[0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0],[0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],[0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0],[0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0]],
+            [[0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0],[0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0],[0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0],[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0],[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],[0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0]],
+            [[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,1,1,1,0,0,0,0,0],[0,0,0,0,1,1,1,1,1,1,1,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,1,1,1,1,1,1,1,1,0,0,0,0],[0,0,1,1,1,1,1,1,1,1,1,1,0,0,1,1,1,1,1,1,1,1,1,1,1,1,0,0,1,1,1,1,1,1,1,1,1,1,1,0,0,0],[0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],[0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0],[0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]],
+            [[0,0,0,0,1,1,1,1,1,1,0,0,0,0,0,0],[0,0,0,1,1,1,1,1,1,1,1,1,0,0,0,0],[0,0,0,1,1,1,1,1,1,1,1,1,0,0,0,0],[0,0,0,1,1,1,1,1,1,1,1,1,1,0,0,0],[0,0,0,1,1,1,1,1,1,1,1,1,1,0,0,0],[0,0,0,1,1,1,1,1,1,1,1,1,1,0,0,0],[0,0,0,0,1,1,1,1,1,1,1,1,1,0,0,0],[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0],[0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]],
+            [[0,0,1,1,1,1,0,0,0,0],[0,1,1,1,1,1,1,0,0,0],[0,1,1,1,1,1,1,1,0,0],[1,1,1,1,1,1,1,1,1,1]],
+            [[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0],[0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0],[0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0],[0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0],[0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0],[0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0],[0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0],[0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0],[0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],[0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0],[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0],[0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0],[0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0],[0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]]
+        ];
+
+        this.spawnInitialClouds();
     }
 
-    /*
-    // Add a new cloud, but check for overlap first
-    addCloud() {
-        let newCloud;
-        let overlap = true;
-        
-        // Try adding a cloud until we get a non-overlapping position
-        while (overlap) {
-            newCloud = new Cloud(
-                this.cellSize,
-                this.maxWidth,
-                this.maxHeight,
-                this.moveInterval
-            );
-
-            overlap = this.clouds.some(existingCloud => newCloud.isOverlapping(existingCloud));
-
-            // Debugging: print when a cloud is successfully added or skipped
-            if (!overlap) {
-                console.log("Added a new cloud:", newCloud);
-            }
+    spawnInitialClouds() {
+        let xOffset = 0;
+        while (xOffset < this.element.width + 200) { // fill screen + buffer
+            const cloud = this.generateRandomCloud(xOffset);
+            this.clouds.push(cloud);
+            xOffset += cloud.prefab[0].length * this.cellSize + this.randomPadding();
         }
-        
-        // Add the non-overlapping cloud
-        this.clouds.push(newCloud);
     }
-    */
 
-    // Update all clouds and move them across the screen
-    update(context, cols, timestamp) {
-        // Ensure the clouds are added automatically
-        // If no clouds have been added, we add them
-        // if (this.clouds.length === 0) {
-        //     this.addCloud(); // Add at least one cloud on start
-        // }
+    randomPadding() {
+        const { min, max } = this.paddingRange;
+        return this.cellSize * (Math.floor(Math.random() * (max - min + 1)) + min);
+    }
 
-        for (const cloud of this.clouds) {
-            cloud.draw(context);
+    cloudsOverlap(a, b) {
+        const aRight = a.x + a.prefab[0].length * this.cellSize;
+        const aBottom = a.y + a.prefab.length * this.cellSize;
+        const bRight = b.x + b.prefab[0].length * this.cellSize;
+        const bBottom = b.y + b.prefab.length * this.cellSize;
+    
+        return !(aRight + this.cellSize < b.x ||
+                 a.x > bRight + this.cellSize ||
+                 aBottom + this.cellSize < b.y ||
+                 a.y > bBottom + this.cellSize);
+    }
+
+    generateRandomCloud(xStart = null, maxTries = 10) {
+        for (let attempt = 0; attempt < maxTries; attempt++) {
+            const prefab = this.prefabs[Math.floor(Math.random() * this.prefabs.length)];
+            if (!prefab || prefab.length === 0) continue;
+    
+            const y = Math.floor(Math.random() * (this.rows - prefab.length)) * this.cellSize;
+            const x = xStart !== null ? xStart : this.element.width + this.randomPadding();
+    
+            const newCloud = { x, y, prefab };
+    
+            // Check for overlap
+            const isOverlapping = this.clouds.some(cloud => this.cloudsOverlap(newCloud, cloud));
+            if (!isOverlapping) return newCloud;
         }
+    
+        // If no spot found, return something offscreen to try again later
+        return {
+            x: this.element.width + 50,
+            y: 0,
+            prefab: this.prefabs[0] || [[1]]
+        };
+    }
 
-        /*
-        if (this.clouds.length === 0) {
-            this.clouds.push();
-
-            console.log("DEBUG::this.clouds", this.clouds);
-
+    update(timestamp) {
+        if (!this.lastUpdate) {
+            this.lastUpdate = timestamp;
+            return;
+        }
+    
+        const elapsed = timestamp - this.lastUpdate;
+    
+        if (elapsed >= this.stepInterval) {
+            // Move clouds one full cell
             this.clouds.forEach(cloud => {
-                // cloud.update(cols, timestamp); // Update cloud's position with the timestamp
-                cloud.draw(context); // Draw the cloud
+                cloud.x -= this.cellSize;
             });
+    
+            // Remove offscreen clouds
+            this.clouds = this.clouds.filter(cloud =>
+                cloud.x + cloud.prefab[0].length * this.cellSize > 0
+            );
+    
+            // Add new cloud if room on the right
+            const lastCloud = this.clouds[this.clouds.length - 1];
+            if (lastCloud) {
+                const lastRightEdge = lastCloud.x + lastCloud.prefab[0].length * this.cellSize;
+                if (lastRightEdge < this.element.width + 100) {
+                    this.clouds.push(this.generateRandomCloud());
+                }
+            }
+    
+            // Reset timer — important!
+            this.lastUpdate = timestamp;
         }
-        */
+    }
+
+    draw() {
+        this.clouds.forEach(cloud => {
+            this.drawCloud(cloud);
+        });
+    }
+
+    drawCloud(cloud) {
+        const { x, y, prefab } = cloud;
+        prefab.forEach((row, rowIndex) => {
+            row.forEach((cell, colIndex) => {
+                if (cell) {
+                    this.context.fillStyle = "rgba(62, 62, 62, 0.5)";
+
+                    this.context.fillRect(
+                        x + colIndex * this.cellSize,
+                        y + rowIndex * this.cellSize,
+                        this.cellSize,
+                        this.cellSize
+                    );
+                }
+            });
+        });
     }
 }
 
@@ -261,11 +299,11 @@ class Rain {
     drawLineUsingGrid = (start, end, context) => {
         let x1 = start[0], y1 = start[1];
         let x2 = end[0], y2 = end[1];
-        
+
         let dx = Math.abs(x2 - x1), dy = Math.abs(y2 - y1);
         let sx = x1 < x2 ? 1 : -1, sy = y1 < y2 ? 1 : -1;
         let p = dx - dy;
-        
+
         while (true) {
             // Calculate the relative position along the drop's length to determine opacity
             let distance = y1 - start[1];
@@ -273,10 +311,10 @@ class Rain {
 
             // Set the fill color with the calculated opacity
             context.fillStyle = `rgba(100, 100, 100, ${opacity})`;
-            
+
             // Draw the raindrop pixel
             context.fillRect(x1 * this.cellSize, y1 * this.cellSize, this.cellSize, this.cellSize);
-            
+
             if (x1 === x2 && y1 === y2) break;
             let e2 = 2 * p;
             if (e2 > -dy) { p -= dy; x1 += sx; }
@@ -313,6 +351,7 @@ class Drawing {
     maxHistorySize = 3;
     drawing = false;
     isAltPressed = false;
+    primedForFloodFill = false;
 
     constructor(element, context, cellSize) {
         this.element = element;
@@ -324,11 +363,21 @@ class Drawing {
         this.element.addEventListener("mousemove", this.handleMouseMove);
         this.element.addEventListener("mouseout", this.handleMouseOut);
         window.addEventListener("keydown", this.handleKeyDown);
+        window.addEventListener("keyup", this.handleKeyUp);
     }
 
     handleMouseDown = (event) => {
         this.drawing = true;
         this.isAltPressed = event.altKey;
+
+        if (this.primedForFloodFill) {
+            const [x, y] = this.getPosition(event);
+
+            this.floodFill(x, y);
+
+            return;
+        }
+
         const timestamp = Date.now();
 
         // New action begins: push a new entry to undoStack
@@ -345,10 +394,16 @@ class Drawing {
 
     handleMouseUp = () => {
         this.drawing = false;
+
+        this.data();
     };
 
     handleMouseOut = () => {
+        if (!this.drawing) return;
+
         this.drawing = false;
+
+        this.data();
     };
 
     handleMouseMove = (event) => {
@@ -393,6 +448,16 @@ class Drawing {
 
         if (event.ctrlKey && event.key === "y") {
             this.redo();
+        }
+
+        if (event.key === "f" || event.key === "F") {
+            this.primedForFloodFill = true;
+        }
+    };
+
+    handleKeyUp = (event) => {
+        if (event.key === "f" || event.key === "F") {
+            this.primedForFloodFill = false;
         }
     };
 
@@ -473,6 +538,89 @@ class Drawing {
             );
         });
     };
+
+    data = () => {
+        // First find bounds of the drawing
+        const positions = Array.from(this.cells).map(key => key.split(',').map(Number));
+
+        if (positions.length === 0) {
+            console.log("[]");
+            return;
+        }
+
+        let minX = Infinity, maxX = -Infinity;
+        let minY = Infinity, maxY = -Infinity;
+
+        positions.forEach(([x, y]) => {
+            if (x < minX) minX = x;
+            if (x > maxX) maxX = x;
+            if (y < minY) minY = y;
+            if (y > maxY) maxY = y;
+        });
+
+        const rows = maxY - minY + 1;
+        const cols = maxX - minX + 1;
+
+        const grid = Array.from({ length: rows }, () =>
+            Array(cols).fill(0)
+        );
+
+        positions.forEach(([x, y]) => {
+            grid[y - minY][x - minX] = 1;
+        });
+
+        console.log(JSON.stringify(grid));
+    }
+
+    floodFill = (startX, startY) => {
+        const maxCols = Math.floor(this.element.width / this.cellSize);
+        const maxRows = Math.floor(this.element.height / this.cellSize);
+
+        const isInsideBounds = (x, y) => x >= 0 && y >= 0 && x < maxCols && y < maxRows;
+
+        const startKey = `${startX},${startY}`;
+        if (this.cells.has(startKey)) return;
+
+        const filled = new Set();
+        const queue = [[startX, startY]];
+        const newCells = [];
+
+        while (queue.length > 0) {
+            const [x, y] = queue.shift();
+            const key = `${x},${y}`;
+
+            if (!isInsideBounds(x, y) || filled.has(key) || this.cells.has(key)) {
+                continue;
+            }
+
+            filled.add(key);
+            this.cells.add(key);
+            newCells.push(key);
+
+            this.context.fillStyle = "white";
+            this.context.fillRect(
+                x * this.cellSize,
+                y * this.cellSize,
+                this.cellSize,
+                this.cellSize
+            );
+
+            queue.push([x + 1, y]);
+            queue.push([x - 1, y]);
+            queue.push([x, y + 1]);
+            queue.push([x, y - 1]);
+        }
+
+        const timestamp = Date.now();
+        this.undoStack.push({ timestamp, cells: newCells });
+        if (this.undoStack.length > this.maxHistorySize) {
+            this.undoStack.shift();
+        }
+
+        this.redoStack = [];
+
+        this.data();
+    };
 }
 
 export default class Canvas {
@@ -490,7 +638,7 @@ export default class Canvas {
 
     drawGrid = () => {
         this.context.strokeStyle = "rgb(9, 9, 9)";
-        
+
         for (let i = 0; i <= this.cols; i++) {
             let x = i * this.cellSize;
             this.context.beginPath();
@@ -498,7 +646,7 @@ export default class Canvas {
             this.context.lineTo(x, this.element.height);
             this.context.stroke();
         }
-        
+
         for (let j = 0; j <= this.rows; j++) {
             let y = j * this.cellSize;
             this.context.beginPath();
@@ -513,7 +661,7 @@ export default class Canvas {
         this.element.id = "background";
 
         this.context = this.element.getContext("2d");
-        
+
         document.body.appendChild(this.element);
 
         window.addEventListener("resize", this.resizeCanvas);
@@ -524,14 +672,16 @@ export default class Canvas {
         );
 
         this.clouds = new Clouds(
-            this.cellSize
+            this.cellSize,
+            this.context,
+            this.element,
         );
 
-        this.drawing = new Drawing(
-            this.element,
-            this.context,
-            this.cellSize
-        );
+        // this.drawing = new Drawing(
+        //     this.element,
+        //     this.context,
+        //     this.cellSize
+        // );
 
         this.loop();
     }
@@ -539,64 +689,15 @@ export default class Canvas {
     loop = (timestamp) => {
         this.context.fillStyle = this.backgroundColor;
         this.context.fillRect(0, 0, this.element.width, this.element.height);
-        
-        this.drawGrid();
 
-        // TODO : DRAW CLOUDS, GET THEIR DATA, AND CREATE A SET OF CLOUDS TO DRAW AND SCROLL
-        // this.clouds.update(this.context, this.cols, timestamp);
         this.rain.update(this.context, this.cellSize, timestamp);
-        this.drawing.render();
+        // this.clouds.render();
+        // this.clouds.update();
+        this.clouds.update(timestamp);
+        this.clouds.draw();
+        // this.drawing.render();
+        this.drawGrid();
 
         requestAnimationFrame(this.loop);
     }
 }
-
-
-
-// ---
-
-/*
-update(cols, timestamp) {
-    context.fillStyle = "rgba(255, 255, 255)";
-
-    for (let i = 0; i < this.height; i++) {
-        for (let j = 0; j < this.width; j++) {
-            context.fillRect(
-                i * this.cellSize,
-                j * this.cellSize,
-                this.cellSize,
-                this.cellSize
-                );
-        }
-    }
-
-}
-*/
-
-// Check if this cloud overlaps with another cloud
-/*
-isOverlapping(otherCloud) {
-    // Allow for some space between clouds (e.g., 10% of their width)
-    const overlapBuffer = 0.1 * this.width;
-
-    return !(this.x + this.width + overlapBuffer <= otherCloud.x || // this is to the left of other
-                this.x - overlapBuffer >= otherCloud.x + otherCloud.width || // this is to the right of other
-                this.y + this.height <= otherCloud.y || // this is above other
-                this.y >= otherCloud.y + otherCloud.height); // this is below other
-}
-*/
-
-/*
-const timeDiff = timestamp - this.lastMoveTime;
-
-if (timeDiff >= this.moveInterval) { // Move after the specified moveInterval
-    this.x += this.speed; // Move right by one cell
-    this.lastMoveTime = timestamp; // Update last move time
-
-    // Reset the cloud when it goes off the screen
-    if (this.x > cols * this.cellSize) {
-        this.x = -this.width; // Place cloud off-screen to the left
-        this.y = Math.floor(Math.random() * 5) * this.cellSize; // Reset y position randomly
-    }
-}
-*/
