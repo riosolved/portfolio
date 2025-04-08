@@ -147,7 +147,7 @@ class Rain {
     raindropOpacityEnd = 0.1;
     raindropOpacityStart = 0.8;
     lastStepTime = 0; // controls movement step
-    stepInterval = 10; // 1 second in ms
+    stepInterval = 100; // 1 second in ms
 
     constructor(cellSize) {
         this.cellSize = cellSize;
