@@ -1,134 +1,3 @@
-/*
-export default class Canvas {
-    backgroundColor = "rgb(12, 12, 12)";
-    cellSize = 5;
-
-    resizeCanvas = () => {
-        this.element.width = window.innerWidth;
-        this.element.height = window.innerHeight;
-        this.rows = Math.floor(this.element.height / this.cellSize);
-        this.cols = Math.floor(this.element.width / this.cellSize);
-    }
-
-    drawGrid = () => {
-        this.context.strokeStyle = "rgb(9, 9, 9)";
-        
-        for (let i = 0; i <= this.cols; i++) {
-            let x = i * this.cellSize;
-            this.context.beginPath();
-            this.context.moveTo(x, 0);
-            this.context.lineTo(x, this.element.height);
-            this.context.stroke();
-        }
-        
-        for (let j = 0; j <= this.rows; j++) {
-            let y = j * this.cellSize;
-            this.context.beginPath();
-            this.context.moveTo(0, y);
-            this.context.lineTo(this.element.width, y);
-            this.context.stroke();
-        }
-    }
-
-    initialize = () => {
-        this.rain = new Rain(this.cellSize);
-        this.element = document.createElement("canvas");
-        this.element.id = "background";
-        this.context = this.element.getContext("2d");
-        
-        document.body.appendChild(this.element);
-
-        window.addEventListener("resize", this.resizeCanvas);
-        this.resizeCanvas();
-        
-        this.loop();
-    }
-
-    loop = (timestamp) => {
-        this.context.fillStyle = this.backgroundColor;
-        this.context.fillRect(0, 0, this.element.width, this.element.height);
-        
-        this.drawGrid(); // Draw the new grid
-        this.rain.update(this.context, this.cellSize, timestamp);
-
-        requestAnimationFrame(this.loop);
-    }
-}
-
-class Rain {
-    drops = [];
-    raindropLengthMin = 1;
-    raindropLengthMax = 5;
-    raindropOpacityEnd = 0.1;
-    raindropOpacityStart = 0.8;
-    lastTime = 0;
-    deltaTime = 0;
-
-    constructor(cellSize) {
-        this.cellSize = cellSize;
-    }
-
-    createRaindrop = () => {
-        return {
-            x: Math.floor(Math.random() * (window.innerWidth / this.cellSize)),
-            y: 0,
-            length: Math.floor(Math.random() * (this.raindropLengthMax - this.raindropLengthMin) + this.raindropLengthMin),
-        };
-    }
-
-    updateRaindropMovement = (drop) => {
-        drop.y += 1; // Move one grid unit downward
-    }
-
-    drawLineUsingGrid = (start, end, context) => {
-        let x1 = start[0], y1 = start[1];
-        let x2 = end[0], y2 = end[1];
-        
-        let dx = Math.abs(x2 - x1), dy = Math.abs(y2 - y1);
-        let sx = x1 < x2 ? 1 : -1, sy = y1 < y2 ? 1 : -1;
-        let p = dx - dy;
-        
-        while (true) {
-            // Calculate the relative position along the drop's length to determine opacity
-            let distance = y1 - start[1];
-            let opacity = this.raindropOpacityEnd + (distance / (end[1] - start[1])) * (this.raindropOpacityStart - this.raindropOpacityEnd);
-
-            // Set the fill color with the calculated opacity
-            context.fillStyle = `rgba(100, 100, 100, ${opacity})`;
-            
-            // Draw the raindrop pixel
-            context.fillRect(x1 * this.cellSize, y1 * this.cellSize, this.cellSize, this.cellSize);
-            
-            if (x1 === x2 && y1 === y2) break;
-            let e2 = 2 * p;
-            if (e2 > -dy) { p -= dy; x1 += sx; }
-            if (e2 < dx) { p += dx; y1 += sy; }
-        }
-    }
-
-    update = (context, cellSize, timestamp) => {
-        this.deltaTime = (timestamp - this.lastTime) / 1000;
-        this.lastTime = timestamp;
-
-        if (Math.random() < 0.05) {
-            this.drops.push(this.createRaindrop());
-        }
-
-        for (let i = this.drops.length - 1; i >= 0; i--) {
-            let drop = this.drops[i];
-            this.updateRaindropMovement(drop);
-
-            let endY = drop.y + drop.length;
-            this.drawLineUsingGrid([drop.x, drop.y], [drop.x, endY], context);
-
-            if (drop.y > Math.floor(window.innerHeight / cellSize)) {
-                this.drops.splice(i, 1);
-            }
-        }
-    }
-}
-*/
-
 class Clouds {
     constructor(cellSize, context, element, paddingRange = { min: 1, max: 5 }) {
         this.cellSize = cellSize;
@@ -257,7 +126,7 @@ class Clouds {
         prefab.forEach((row, rowIndex) => {
             row.forEach((cell, colIndex) => {
                 if (cell) {
-                    this.context.fillStyle = "rgba(62, 62, 62, 0.5)";
+                    this.context.fillStyle = "rgba(25, 25, 25)";
 
                     this.context.fillRect(
                         x + colIndex * this.cellSize,
@@ -273,24 +142,26 @@ class Clouds {
 
 class Rain {
     drops = [];
-    raindropLengthMin = 1;
-    raindropLengthMax = 5;
+    raindropLengthMin = 5;
+    raindropLengthMax = 15;
     raindropOpacityEnd = 0.1;
     raindropOpacityStart = 0.8;
-    lastTime = 0;
-    deltaTime = 0;
+    lastStepTime = 0; // controls movement step
+    stepInterval = 10; // 1 second in ms
 
     constructor(cellSize) {
         this.cellSize = cellSize;
     }
 
     createRaindrop = () => {
+        const length = Math.floor(Math.random() * (this.raindropLengthMax - this.raindropLengthMin) + this.raindropLengthMin);
         return {
             x: Math.floor(Math.random() * (window.innerWidth / this.cellSize)),
-            y: 0,
-            length: Math.floor(Math.random() * (this.raindropLengthMax - this.raindropLengthMin) + this.raindropLengthMin),
+            y: -length, // start *above* the grid
+            length: length,
         };
     }
+    
 
     updateRaindropMovement = (drop) => {
         drop.y += 1; // Move one grid unit downward
@@ -305,14 +176,9 @@ class Rain {
         let p = dx - dy;
 
         while (true) {
-            // Calculate the relative position along the drop's length to determine opacity
             let distance = y1 - start[1];
             let opacity = this.raindropOpacityEnd + (distance / (end[1] - start[1])) * (this.raindropOpacityStart - this.raindropOpacityEnd);
-
-            // Set the fill color with the calculated opacity
-            context.fillStyle = `rgba(100, 100, 100, ${opacity})`;
-
-            // Draw the raindrop pixel
+            context.fillStyle = `rgba(25, 25, 25, ${opacity})`;
             context.fillRect(x1 * this.cellSize, y1 * this.cellSize, this.cellSize, this.cellSize);
 
             if (x1 === x2 && y1 === y2) break;
@@ -323,17 +189,28 @@ class Rain {
     }
 
     update = (context, cellSize, timestamp) => {
-        this.deltaTime = (timestamp - this.lastTime) / 1000;
-        this.lastTime = timestamp;
-
-        if (Math.random() < 0.05) {
-            this.drops.push(this.createRaindrop());
+        // Only move drops if one second has passed
+        if (!this.lastStepTime) {
+            this.lastStepTime = timestamp;
         }
 
+        if (timestamp - this.lastStepTime >= this.stepInterval) {
+            // Add new raindrop occasionally
+            if (Math.random() < 0.3) {
+                this.drops.push(this.createRaindrop());
+            }
+
+            // Move drops down
+            for (let drop of this.drops) {
+                this.updateRaindropMovement(drop);
+            }
+
+            this.lastStepTime = timestamp;
+        }
+
+        // Draw raindrops (even if not moving this frame)
         for (let i = this.drops.length - 1; i >= 0; i--) {
             let drop = this.drops[i];
-            this.updateRaindropMovement(drop);
-
             let endY = drop.y + drop.length;
             this.drawLineUsingGrid([drop.x, drop.y], [drop.x, endY], context);
 
@@ -691,8 +568,6 @@ export default class Canvas {
         this.context.fillRect(0, 0, this.element.width, this.element.height);
 
         this.rain.update(this.context, this.cellSize, timestamp);
-        // this.clouds.render();
-        // this.clouds.update();
         this.clouds.update(timestamp);
         this.clouds.draw();
         // this.drawing.render();
