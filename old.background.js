@@ -2607,3 +2607,96 @@ class Rain {
 
 
 
+
+---
+
+
+class Clouds {
+    constructor(cellSize, context, element) {
+        this.cellSize = cellSize;
+        this.context = context;
+        this.element = element;
+
+        this.clouds = [];
+        this.rows = Math.floor(this.element.height / this.cellSize);
+        this.columns = Math.floor(this.element.width / this.cellSize);
+        this.minimumDistance = 3; // Minimum distance between clouds (in grid cells)
+
+        this.initializeClouds();
+    }
+
+    initializeClouds() {
+        let grid = [];
+        for (let i = 0; i < this.rows; i++) {
+            grid.push(new Array(this.columns).fill(false));
+        }
+
+        let activeList = [];
+        let firstPoint = [
+            Math.floor(Math.random() * this.columns),
+            Math.floor(Math.random() * this.rows)
+        ];
+        activeList.push(firstPoint);
+        this.clouds.push(firstPoint);
+        grid[firstPoint[1]][firstPoint[0]] = true;
+
+        while (activeList.length > 0) {
+            const index = Math.floor(Math.random() * activeList.length);
+            const point = activeList[index];
+
+            let found = false;
+            for (let i = 0; i < 30; i++) { // Try up to 30 attempts for a valid point
+                const angle = Math.random() * 2 * Math.PI;
+                const distance = this.minimumDistance + Math.random();
+                const newX = point[0] + Math.floor(Math.cos(angle) * distance);
+                const newY = point[1] + Math.floor(Math.sin(angle) * distance);
+
+                if (
+                    newX >= 0 && newX < this.columns &&
+                    newY >= 0 && newY < this.rows &&
+                    !grid[newY][newX] &&
+                    this.isFarEnough(newX, newY)
+                ) {
+                    activeList.push([newX, newY]);
+                    this.clouds.push([newX, newY]);
+                    grid[newY][newX] = true;
+                    found = true;
+                    break;
+                }
+            }
+
+            if (!found) {
+                activeList.splice(index, 1);
+            }
+        }
+    }
+
+    isFarEnough(x, y) {
+        for (let [cloudX, cloudY] of this.clouds) {
+            const dx = x - cloudX;
+            const dy = y - cloudY;
+            if (Math.sqrt(dx * dx + dy * dy) < this.minimumDistance) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    draw() {
+        this.context.fillStyle = "white";
+        for (let [x, y] of this.clouds) {
+            this.context.fillRect(
+                x * this.cellSize,
+                y * this.cellSize,
+                this.cellSize,
+                this.cellSize
+            );
+        }
+    }
+
+    update() {
+        // Optionally, add logic here to animate or change clouds
+    }
+}
+
+
