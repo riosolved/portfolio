@@ -1344,130 +1344,6 @@ class PoissonDiskSampler {
 }
 */
 
-class PoissonDiskSampler {
-    constructor(columns, rows, radius = 2, k = 30) {
-        this.columns = columns;
-        this.rows = rows;
-        this.radius = radius; // in grid cells, not pixels
-        this.k = k;
-
-        this.grid = Array.from({ length: rows }, () => Array(columns).fill(null));
-        this.samples = [];
-    }
-
-    isValid(row, column) {
-        if (row < 0 || column < 0 || row >= this.rows || column >= this.columns) {
-            return false;
-        }
-
-        for (let r = -this.radius; r <= this.radius; r++) {
-            for (let c = -this.radius; c <= this.radius; c++) {
-                const nr = row + r;
-                const nc = column + c;
-
-                if (nr < 0 || nc < 0 || nr >= this.rows || nc >= this.columns) continue;
-
-                const neighbor = this.grid[nr][nc];
-                if (neighbor !== null) {
-                    const dr = nr - row;
-                    const dc = nc - column;
-                    const distSq = dr * dr + dc * dc;
-                    if (distSq < this.radius * this.radius) {
-                        return false;
-                    }
-                }
-            }
-        }
-
-        return true;
-    }
-
-    sample(initial) {
-        const samples = [];
-        const active = [];
-
-        const { row, column } = initial;
-
-        if (!this.isValid(row, column)) return [];
-
-        const initialSample = { row, column };
-
-        this.grid[row][column] = initialSample;
-
-        samples.push(initialSample);
-        active.push(initialSample);
-
-        while (active.length > 0) {
-            let found = false;
-
-            const idx = Math.floor(Math.random() * active.length);
-            const point = active[idx];
-
-            for (let i = 0; i < this.k; i++) {
-                const angle = Math.random() * 2 * Math.PI;
-                const distance = this.radius + Math.random();
-
-                const offsets = {
-                    vertical: Math.round(distance * Math.sin(angle)),
-                    horizontal: Math.round(distance * Math.cos(angle))
-                };
-
-                const target = {
-                    row: point.row + offsets.vertical,
-                    column: point.column + offsets.horizontal,
-                };
-
-                if (this.isValid(target.row, target.column)) {
-                    const candidate = {
-                        row: target.row,
-                        column: target.column
-                    };
-
-                    this.grid[target.row][target.column] = candidate;
-
-                    samples.push(candidate);
-                    active.push(candidate);
-
-                    found = true;
-
-                    break;
-                }
-            }
-
-            if (!found) {
-                active.splice(idx, 1);
-            }
-        }
-
-        this.samples = samples;
-
-        return samples;
-    }
-
-    // New method to recalculate the boundary between two chunks
-    recalculateBoundary(topBoundary, bottomBoundary) {
-        // For simplicity, let's assume we're working with the last row of the top chunk and the first row of the bottom chunk
-
-        // Recalculate the first row of the bottom chunk based on the top boundary
-        for (let col = 0; col < this.columns; col++) {
-            const topSample = topBoundary[col];
-            const bottomSample = bottomBoundary[col];
-
-            // Create an offset based on the top sample
-            const offsetRow = topSample.row + Math.round(Math.random() * this.radius) - this.radius;
-            const offsetCol = topSample.column + Math.round(Math.random() * this.radius) - this.radius;
-
-            // Ensure the new sample is valid and falls within the valid area
-            if (this.isValid(offsetRow, offsetCol)) {
-                bottomBoundary[col] = { row: offsetRow, column: offsetCol };
-            }
-        }
-
-        // Return the updated bottom boundary
-        return bottomBoundary;
-    }
-}
-
 /*
 class Chunker {
     constructor(columns, rows, cellSize) {
@@ -1610,6 +1486,107 @@ class Chunker {
 }
 */
 
+class PoissonDiskSampler {
+    constructor(columns, rows, radius = 2, k = 30) {
+        this.columns = columns;
+        this.rows = rows;
+        this.radius = radius; // in grid cells, not pixels
+        this.k = k;
+
+        this.grid = Array.from({ length: rows }, () => Array(columns).fill(null));
+        this.samples = [];
+    }
+
+    isValid(row, column) {
+        if (row < 0 || column < 0 || row >= this.rows || column >= this.columns) {
+            return false;
+        }
+
+        for (let r = -this.radius; r <= this.radius; r++) {
+            for (let c = -this.radius; c <= this.radius; c++) {
+                const nr = row + r;
+                const nc = column + c;
+
+                if (nr < 0 || nc < 0 || nr >= this.rows || nc >= this.columns) continue;
+
+                const neighbor = this.grid[nr][nc];
+                if (neighbor !== null) {
+                    const dr = nr - row;
+                    const dc = nc - column;
+                    const distSq = dr * dr + dc * dc;
+                    if (distSq < this.radius * this.radius) {
+                        return false;
+                    }
+                }
+            }
+        }
+
+        return true;
+    }
+
+    sample(initial) {
+        const samples = [];
+        const active = [];
+
+        const { row, column } = initial;
+
+        if (!this.isValid(row, column)) return [];
+
+        const initialSample = { row, column };
+
+        this.grid[row][column] = initialSample;
+
+        samples.push(initialSample);
+        active.push(initialSample);
+
+        while (active.length > 0) {
+            let found = false;
+
+            const idx = Math.floor(Math.random() * active.length);
+            const point = active[idx];
+
+            for (let i = 0; i < this.k; i++) {
+                const angle = Math.random() * 2 * Math.PI;
+                const distance = this.radius + Math.random();
+
+                const offsets = {
+                    vertical: Math.round(distance * Math.sin(angle)),
+                    horizontal: Math.round(distance * Math.cos(angle))
+                };
+
+                const target = {
+                    row: point.row + offsets.vertical,
+                    column: point.column + offsets.horizontal,
+                };
+
+                if (this.isValid(target.row, target.column)) {
+                    const candidate = {
+                        row: target.row,
+                        column: target.column
+                    };
+
+                    this.grid[target.row][target.column] = candidate;
+
+                    samples.push(candidate);
+                    active.push(candidate);
+
+                    found = true;
+
+                    break;
+                }
+            }
+
+            if (!found) {
+                active.splice(idx, 1);
+            }
+        }
+
+        this.samples = samples;
+
+        return samples;
+    }
+}
+
 class Chunker {
     constructor(columns, rows, cellSize) {
         this.columns = columns;
@@ -1669,7 +1646,7 @@ class Chunker {
         const chunk = this.chunk(topRow - chunkHeight, 0);
 
         this.chunks.push(chunk);
-     
+
         this.stitch();
     }
 
@@ -1678,31 +1655,29 @@ class Chunker {
             this.lastTimestamp = timestamp;
             return;
         }
-    
+
         const deltaTime = timestamp - this.lastTimestamp;
         if (deltaTime <= 0) return;
-    
+
         this.lastTimestamp = timestamp;
         this.accumulatedTime += deltaTime;
-    
+
         const unitsToMove = Math.floor(this.accumulatedTime / scrollDuration) * units;
-    
+
         if (unitsToMove > 0) {
             for (let chunk of this.chunks) {
                 for (let cell of chunk.cells) {
                     cell.row += unitsToMove;
                 }
             }
-    
+
             this.accumulatedTime -= unitsToMove * scrollDuration;
 
             // Proceed only if we have at least two chunks
-            // TODO: BRING BACK IN AFTER STITCHING IS COMPLETED
-            /*
             if (this.chunks.length >= 2) {
                 const previousChunk = this.chunks[this.chunks.length - 2];
                 const latestChunk = this.chunks[this.chunks.length - 1];
-    
+
                 const previousTopRow = Math.min(...previousChunk.cells.map(c => c.row));
 
                 // Trigger when the previous chunk hits halfway
@@ -1712,15 +1687,14 @@ class Chunker {
                     const latestHeight =
                         Math.max(...latestChunk.cells.map(c => c.row)) -
                         latestTopRow + 1;
-    
-                    const newChunk = this.chunk(latestTopRow - latestHeight, 0);
 
-                    this.chunks.push(newChunk);
+                    const chunk = this.chunk(latestTopRow - latestHeight, 0);
+
+                    this.chunks.push(chunk);
 
                     this.stitch();
                 }
             }
-            */
 
             // Remove fully offscreen chunks
             this.chunks = this.chunks.filter(chunk =>
@@ -1729,40 +1703,76 @@ class Chunker {
         }
     }
 
-    // TODO : CLEAN UP EDGES
     stitch = () => {
         const current = this.chunks[this.chunks.length - 2].cells;
         const next = this.chunks[this.chunks.length - 1].cells;
 
-        const targets = {
-            next: [],
+        const low = Math.min(...current.map(cell => cell.row));
+        const high = Math.max(...next.map(cell => cell.row));
+
+        const points = [];
+
+        next.forEach((position, index) => {
+            if (position.row >= high - this.radius) {
+                points.push({
+                    index,
+                    chunk: 'next',
+                    position,
+                });
+            }
+        });
+
+        current.forEach((position, index) => {
+            if (position.row <= low + this.radius) {
+                points.push({
+                    index,
+                    chunk: 'current',
+                    position,
+                });
+            }
+        });
+
+        const minRow = Math.min(...points.map(point => point.position.row));
+        const maxRow = Math.max(...points.map(point => point.position.row));
+        const minCol = Math.min(...points.map(point => point.position.column));
+        const maxCol = Math.max(...points.map(point => point.position.column));
+
+        const rows = maxRow - minRow + 1;
+        const columns = maxCol - minCol + 1;
+
+        // Stitch sampler only for the seam
+        const sampler = new PoissonDiskSampler(columns, rows, this.radius);
+
+        const remove = {
             current: [],
+            next: [],
         };
 
-        next.forEach(({ row }, index) => {
-            if(row >= (Math.max(...next.map(c => c.row)) - this.radius)) {
-                targets.next.push(index);
+        for (let point of points) {
+            const row = point.position.row - minRow;
+            const column = point.position.column - minCol;
+
+            if (!sampler.isValid(row, column)) {
+                if (point.chunk === 'current') {
+                    remove.current.push(point.index);
+                } else if (point.chunk === 'next') {
+                    remove.next.push(point.index);
+                }
+            } else {
+                sampler.grid[row][column] = {
+                    row,
+                    column,
+                };
             }
-        });
+        }
 
-        current.forEach(({ row }, index) => {
-            if(row <= (Math.min(...current.map(c => c.row)) + this.radius)) {
-                targets.current.push(index);
-            }
-        });
-
-        targets.next.forEach(index => {
-            next[index].fillStyle = 'red';
-        });
-
-        targets.current.forEach(index => {
-            current[index].fillStyle = 'red';
-        });
+        remove.current.sort((a, b) => b - a).forEach(index => current.splice(index, 1));
+        remove.next.sort((a, b) => b - a).forEach(index => next.splice(index, 1));
 
         this.chunks[this.chunks.length - 1].cells = next;
         this.chunks[this.chunks.length - 2].cells = current;
     }
- 
+
     draw(context) {
         for (const chunk of this.chunks) {
             const minRow = Math.min(...chunk.cells.map(c => c.row));
