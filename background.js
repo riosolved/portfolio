@@ -1767,11 +1767,11 @@ class Drawing {
 };
 
 class PoissonDiskSampler {
-    constructor(columns, rows, radius = 2, k = 30) {
+    constructor(columns, rows, radius = 2, limit = 30) {
         this.columns = columns;
         this.rows = rows;
         this.radius = radius; // in grid cells, not pixels
-        this.k = k;
+        this.limit = limit;
 
         this.grid = Array.from({ length: rows }, () => Array(columns).fill(null));
         this.samples = [];
@@ -1790,10 +1790,12 @@ class PoissonDiskSampler {
                 if (nr < 0 || nc < 0 || nr >= this.rows || nc >= this.columns) continue;
 
                 const neighbor = this.grid[nr][nc];
+
                 if (neighbor !== null) {
                     const dr = nr - row;
                     const dc = nc - column;
                     const distSq = dr * dr + dc * dc;
+
                     if (distSq < this.radius * this.radius) {
                         return false;
                     }
@@ -1804,28 +1806,24 @@ class PoissonDiskSampler {
         return true;
     }
 
-    sample(initial) {
+    sample(origin) {
         const samples = [];
         const active = [];
 
-        const { row, column } = initial;
+        if (!this.isValid(origin.position.y, origin.position.x)) return [];
 
-        if (!this.isValid(row, column)) return [];
+        this.grid[origin.position.y][origin.position.x] = origin;
 
-        const initialSample = { row, column };
-
-        this.grid[row][column] = initialSample;
-
-        samples.push(initialSample);
-        active.push(initialSample);
+        samples.push(origin);
+        active.push(origin);
 
         while (active.length > 0) {
             let found = false;
 
-            const idx = Math.floor(Math.random() * active.length);
-            const point = active[idx];
+            const id = Math.floor(Math.random() * active.length);
+            const point = active[id];
 
-            for (let i = 0; i < this.k; i++) {
+            for (let tries = 0; tries < this.limit; tries++) {
                 const angle = Math.random() * 2 * Math.PI;
                 const distance = this.radius + Math.random();
 
@@ -1834,18 +1832,15 @@ class PoissonDiskSampler {
                     horizontal: Math.round(distance * Math.cos(angle))
                 };
 
-                const target = {
-                    row: point.row + offsets.vertical,
-                    column: point.column + offsets.horizontal,
+                const candidate = {
+                    position: {
+                        x: point.position.x + offsets.vertical,
+                        y: point.position.y + offsets.horizontal
+                    }
                 };
 
-                if (this.isValid(target.row, target.column)) {
-                    const candidate = {
-                        row: target.row,
-                        column: target.column
-                    };
-
-                    this.grid[target.row][target.column] = candidate;
+                if (this.isValid(candidate.position.y, candidate.position.x)) {
+                    this.grid[candidate.position.y][candidate.position.x] = candidate;
 
                     samples.push(candidate);
                     active.push(candidate);
@@ -1857,7 +1852,7 @@ class PoissonDiskSampler {
             }
 
             if (!found) {
-                active.splice(idx, 1);
+                active.splice(id, 1);
             }
         }
 
@@ -1879,10 +1874,15 @@ class Chunker {
         this.chunks = [];
 
         this.createChunkOnScreen();
-        this.createChunkOffScreen();
+
+        this.createChunkOffScreen({
+            position: {
+                y: -this.rows
+            }
+        });
     }
 
-    chunk(offsetRow = 0, offsetColumn = 0) {
+    chunk(offset = {position: {x: 0, y: 0}}) {
         const sampler = new PoissonDiskSampler(
             this.columns,
             this.rows,
@@ -1890,13 +1890,15 @@ class Chunker {
         );
 
         const cells = sampler.sample({
-            row: Math.floor(Math.random() * this.rows),
-            column: Math.floor(Math.random() * this.columns)
+            position: {
+                x: Math.floor(Math.random() * this.columns),
+                y: Math.floor(Math.random() * this.rows),
+            }
         });
 
         for (let cell of cells) {
-            cell.row += offsetRow;
-            cell.column += offsetColumn;
+            cell.position.x += Math.floor(offset?.position?.x ?? 0);
+            cell.position.y += Math.floor(offset?.position?.y ?? 0);
         }
 
         const colors = {
@@ -1907,182 +1909,172 @@ class Chunker {
         this.fillStyle = this.fillStyle === colors.a ? colors.b : colors.a;
 
         return {
+            id: Math.random().toString(36).substring(2, 9),
+            index: this.chunks.length,
+            hasCreatedNewChunk: false,
+            width: this.columns,
+            height: this.rows,
             cells,
             fillStyle: this.fillStyle,
+            position: {
+                x: Math.floor(offset?.position?.x ?? 0), // In term of grid units.
+                y: Math.floor(offset?.position?.y ?? 0) // In term of grid units.
+            }
         };
     }
 
     createChunkOnScreen = () => {
-        const chunk = this.chunk(0, 0);
+        const chunk = this.chunk();
+
         this.chunks.push(chunk);
     }
 
-    createChunkOffScreen = () => {
-        const lastChunk = this.chunks[this.chunks.length - 1];
-        const topRow = Math.min(...lastChunk.cells.map(c => c.row));
-
-        // Create new chunk right above the last one
-        const chunkHeight = this.rows; // Assuming full-size chunk
-        const chunk = this.chunk(topRow - chunkHeight, 0);
+    createChunkOffScreen = (offset) => {
+        const chunk = this.chunk(offset);
 
         this.chunks.push(chunk);
 
         this.stitch();
     }
 
-    scrollDown = (timestamp, units = 1, scrollDuration = 1000) => {
+    removeChunk = (id) => {
+        this.chunks = this.chunks.filter(chunk => chunk.id !== id);
+    }
+
+    scrollDown = (timestamp, units = 1, duration = 1000) => {
         if (!this.lastTimestamp) {
             this.lastTimestamp = timestamp;
+
             return;
         }
 
         const deltaTime = timestamp - this.lastTimestamp;
-        if (deltaTime <= 0) return;
+
+        if (deltaTime <= 0) {
+            return;
+        }
 
         this.lastTimestamp = timestamp;
         this.accumulatedTime += deltaTime;
 
-        const unitsToMove = Math.floor(this.accumulatedTime / scrollDuration) * units;
+        const steps = Math.floor(this.accumulatedTime / duration) * units;
 
-        if (unitsToMove > 0) {
+        if (steps > 0) {
+            if(!(this.chunks.length > 0)) {
+                return;
+            }
+
             for (let chunk of this.chunks) {
+                // NOTE : REMOVE CHUNKS
+                if(chunk.position.y > this.rows) {
+                    this.removeChunk(chunk.id);
+
+                    continue;
+                }
+
+                // NOTE : CREATE NEW CHUNK
+                const bottom = chunk.position.y + chunk.height;
+                const half = Math.floor(this.rows / 2);
+
+                if(
+                    !chunk.hasCreatedNewChunk &&
+                    chunk.index > 0 &&
+                    bottom >= half
+                ) {
+                    chunk.hasCreatedNewChunk = true;
+
+                    this.createChunkOffScreen({
+                        position: {
+                            y: chunk.position.y - chunk.height
+                        }
+                    });
+                }
+
+                chunk.position.y += units;
+
                 for (let cell of chunk.cells) {
-                    cell.row += unitsToMove;
+                    cell.position.y += units;
                 }
             }
 
-            this.accumulatedTime -= unitsToMove * scrollDuration;
-
-            // Proceed only if we have at least two chunks
-            if (this.chunks.length >= 2) {
-                const previousChunk = this.chunks[this.chunks.length - 2];
-                const latestChunk = this.chunks[this.chunks.length - 1];
-
-                const previousTopRow = Math.min(...previousChunk.cells.map(c => c.row));
-
-                // Trigger when the previous chunk hits halfway
-                if (previousTopRow >= this.rows / 2) {
-                    const latestTopRow = Math.min(...latestChunk.cells.map(c => c.row));
-
-                    const latestHeight =
-                        Math.max(...latestChunk.cells.map(c => c.row)) -
-                        latestTopRow + 1;
-
-                    const chunk = this.chunk(latestTopRow - latestHeight, 0);
-
-                    this.chunks.push(chunk);
-
-                    this.stitch();
-                }
-            }
-
-            // Remove fully offscreen chunks
-            this.chunks = this.chunks.filter(chunk =>
-                chunk.cells.some(cell => cell.row < this.rows)
-            );
+            this.accumulatedTime -= steps * duration;
         }
+
     }
 
+    // TODO
     stitch = () => {
-        const current = this.chunks[this.chunks.length - 2].cells;
-        const next = this.chunks[this.chunks.length - 1].cells;
-
-        const low = Math.min(...current.map(cell => cell.row));
-        const high = Math.max(...next.map(cell => cell.row));
+        const current = this.chunks[this.chunks.length - 2];
+        const next = this.chunks[this.chunks.length - 1];
 
         const points = [];
 
-        next.forEach((position, index) => {
-            if (position.row >= high - this.radius) {
+        next.cells.forEach((cell, index) => {
+            const target = next.position.y + (next.height - this.radius);
+
+            if (cell.position.y >= target) {
+                next.cells[index].fillStyle = 'red';
+
                 points.push({
                     index,
-                    chunk: 'next',
-                    position,
+                    position: cell.position,
+                    chunk: {
+                        type: 'next',
+                        height: next.height,
+                        width: next.width,
+                        position: next.position,
+                    }
                 });
             }
         });
 
-        current.forEach((position, index) => {
-            if (position.row <= low + this.radius) {
+        current.cells.forEach((cell, index) => {
+            const target = current.position.y + this.radius;
+
+            if (cell.position.y <= target) {
+                current.cells[index].fillStyle = 'red';
+
                 points.push({
                     index,
-                    chunk: 'current',
-                    position,
+                    position: cell.position,
+                    chunk: {
+                        type: 'current',
+                        height: current.height,
+                        width: current.width,
+                        position: current.position,
+                    }
                 });
             }
         });
-
-        // TODO : FIND NEXT INVALID SAMPLE POINTS
 
         console.log("DEBUG::points", points);
     };
 
-    /*
-    const minRow = Math.min(...points.map(point => point.position.row));
-    const maxRow = Math.max(...points.map(point => point.position.row));
-    const minCol = Math.min(...points.map(point => point.position.column));
-    const maxCol = Math.max(...points.map(point => point.position.column));
-
-    const rows = maxRow - minRow + 1;
-    const columns = maxCol - minCol + 1;
-
-    // Stitch sampler only for the seam
-    const sampler = new PoissonDiskSampler(columns, rows, this.radius);
-
-    const remove = {
-        current: [],
-        next: [],
-    };
-
-    for (let point of points) {
-        const row = point.position.row - minRow;
-        const column = point.position.column - minCol;
-
-        if (!sampler.isValid(row, column)) {
-            if (point.chunk === 'current') {
-                remove.current.push(point.index);
-            } else if (point.chunk === 'next') {
-                remove.next.push(point.index);
-            }
-        } else {
-            sampler.grid[row][column] = {
-                row,
-                column,
-            };
-        }
-    }
-
-    remove.current.sort((a, b) => b - a).forEach(index => current.splice(index, 1));
-    remove.next.sort((a, b) => b - a).forEach(index => next.splice(index, 1));
-
-    this.chunks[this.chunks.length - 1].cells = next;
-    this.chunks[this.chunks.length - 2].cells = current;
-    */
-
     draw(context) {
+        context.save();
+
         for (const chunk of this.chunks) {
-            const minRow = Math.min(...chunk.cells.map(c => c.row));
-            const maxRow = Math.max(...chunk.cells.map(c => c.row));
-            const minCol = Math.min(...chunk.cells.map(c => c.column));
-            const maxCol = Math.max(...chunk.cells.map(c => c.column));
+            context.fillStyle = chunk?.fillStyle || "white";
 
-            const x = minCol * this.cellSize;
-            const y = minRow * this.cellSize;
-            const width = (maxCol - minCol + 1) * this.cellSize;
-            const height = (maxRow - minRow + 1) * this.cellSize;
-
-            context.save();
-            context.fillStyle = chunk.fillStyle;
-            context.fillRect(x, y, width, height);
-            context.restore();
+            context.fillRect(
+                Math.floor(chunk.position.x * this.cellSize),
+                Math.floor(chunk.position.y * this.cellSize),
+                Math.floor(chunk.width * this.cellSize),
+                Math.floor(chunk.height * this.cellSize),
+            );
 
             for (const cell of chunk.cells) {
                 context.fillStyle = cell?.fillStyle || "white";
 
-                const x = cell.column * this.cellSize;
-                const y = cell.row * this.cellSize;
-                context.fillRect(x, y, this.cellSize, this.cellSize);
+                context.fillRect(
+                    Math.floor(cell.position.x * this.cellSize),
+                    Math.floor(cell.position.y * this.cellSize),
+                    Math.floor(this.cellSize),
+                    Math.floor(this.cellSize),
+                );
             }
+
+            context.restore();
         }
     }
 };
@@ -2096,6 +2088,7 @@ export default class Canvas {
     resizeCanvas = () => {
         this.element.width = window.innerWidth;
         this.element.height = window.innerHeight;
+
         this.rows = Math.floor(this.element.height / this.cellSize);
         this.columns = Math.floor(this.element.width / this.cellSize);
     }
@@ -2147,7 +2140,7 @@ export default class Canvas {
         this.context.fillStyle = this.backgroundColor;
         this.context.fillRect(0, 0, this.element.width, this.element.height);
 
-        this.chunker.scrollDown(timestamp, 5, 150);
+        this.chunker.scrollDown(timestamp, 5, 100);
         this.chunker.draw(this.context);
 
         this.drawGrid();
