@@ -2002,22 +2002,36 @@ class Chunker {
 
     }
 
-    // TODO
+    // NOTE : THIS APPROACH IS NOT A TRUE INFINITE POISSON DISK SAMPLING, STITCH IS JUST A BAND-AID.
+    // TO ACHIEVE TRUE INFINITE POISSON DISK SAMPLING, USE CURRENT TOP MINUS RADIUS SAMPLE POINT SUB-GRID AS THE NEXT'S ORIGIN SAMPLE POINTS.
     stitch = () => {
         const current = this.chunks[this.chunks.length - 2];
         const next = this.chunks[this.chunks.length - 1];
 
         const points = [];
 
+        next.ceiling = next.position.y + next.height;
+
         next.cells.forEach((cell, index) => {
             const target = next.position.y + (next.height - this.radius);
 
             if (cell.position.y >= target) {
-                next.cells[index].fillStyle = 'red';
+                if(cell.position.y <= next.ceiling) {
+                    next.ceiling = cell.position.y;
+                }
+
+                // NOTE : ONLY IN HERE FOR DEBUGGING PURPOSES
+                // next.cells[index].fillStyle = 'red';
 
                 points.push({
                     index,
-                    position: cell.position,
+                    position: {
+                        ...cell.position,
+                        normalized: {
+                            x: cell.position.x,
+                            y: cell.position.y - next.ceiling,
+                        }
+                    },
                     chunk: {
                         type: 'next',
                         height: next.height,
@@ -2032,11 +2046,18 @@ class Chunker {
             const target = current.position.y + this.radius;
 
             if (cell.position.y <= target) {
-                current.cells[index].fillStyle = 'red';
+                // NOTE : ONLY IN HERE FOR DEBUGGING PURPOSES
+                // current.cells[index].fillStyle = 'red';
 
                 points.push({
                     index,
-                    position: cell.position,
+                    position: {
+                        ...cell.position,
+                        normalized: {
+                            x: cell.position.x,
+                            y: cell.position.y - next.ceiling,
+                        }
+                    },
                     chunk: {
                         type: 'current',
                         height: current.height,
@@ -2047,8 +2068,34 @@ class Chunker {
             }
         });
 
-        console.log("DEBUG::points", points);
-    };
+        const violations = [];
+        const radiusSquared = this.radius * this.radius;
+
+        // NOTE : ONLY COMPARING NEXT
+        for(const candidate of points) {
+            if(candidate.chunk.type === 'current') {
+                continue;
+            }
+
+            // NOTE : COMPARE NEXT POINTS AGAINST CURRENT POINTS 
+            for(const point of points) {
+                if(point.chunk.type === 'next') {
+                    continue;
+                }
+
+                const dx = candidate.position.normalized.x - point.position.normalized.x;
+                const dy = candidate.position.normalized.y - point.position.normalized.y;
+
+                const distanceSquared = dx * dx + dy * dy;
+          
+                if (distanceSquared < radiusSquared) {
+                    violations.push(candidate.index);
+                }
+            }
+        }
+
+        next.cells = next.cells.filter((cell, index) => !violations.includes(index));
+    }
 
     draw(context) {
         context.save();
@@ -2056,12 +2103,13 @@ class Chunker {
         for (const chunk of this.chunks) {
             context.fillStyle = chunk?.fillStyle || "white";
 
-            context.fillRect(
-                Math.floor(chunk.position.x * this.cellSize),
-                Math.floor(chunk.position.y * this.cellSize),
-                Math.floor(chunk.width * this.cellSize),
-                Math.floor(chunk.height * this.cellSize),
-            );
+            // NOTE : ONLY IN HERE FOR DEBUGGING PURPOSES
+            // context.fillRect(
+            //     Math.floor(chunk.position.x * this.cellSize),
+            //     Math.floor(chunk.position.y * this.cellSize),
+            //     Math.floor(chunk.width * this.cellSize),
+            //     Math.floor(chunk.height * this.cellSize),
+            // );
 
             for (const cell of chunk.cells) {
                 context.fillStyle = cell?.fillStyle || "white";
