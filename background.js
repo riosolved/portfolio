@@ -522,6 +522,13 @@ class PoissonDiskSampler {
 };
 
 class Chunker {
+    colors = {
+        a: 'rgba(11, 11, 11)',
+        b: 'rgba(10, 10, 10)'
+    };
+
+    fillStyle = this.colors.a;
+
     constructor(columns, rows, cellSize) {
         this.columns = columns;
         this.rows = rows;
@@ -561,15 +568,10 @@ class Chunker {
         for (let cell of cells) {
             cell.position.x += Math.floor(offset?.position?.x ?? 0);
             cell.position.y += Math.floor(offset?.position?.y ?? 0);
-            cell.fillStyle = "rgba(255, 248, 220, 0.02)";
+            cell.fillStyle = "rgba(255, 248, 220, 0.05)";
         }
 
-        const colors = {
-            a: 'rgb(10, 11, 11)',
-            b: 'rgba(10, 10, 10)'
-        };
-
-        this.fillStyle = this.fillStyle === colors.a ? colors.b : colors.a;
+        this.fillStyle = this.fillStyle === this.colors.a ? this.colors.b : this.colors.a;
 
         return {
             id: Math.random().toString(36).substring(2, 9),
@@ -632,15 +634,10 @@ class Chunker {
         for (let cell of cells) {
             cell.position.x += Math.floor(offset?.position?.x ?? 0);
             cell.position.y += Math.floor(offset?.position?.y ?? 0);
-            cell.fillStyle = cell?.seedling ? "rgba(78, 0, 0, 0.1)" : "rgba(255, 248, 220, 0.02)";
+            cell.fillStyle = cell?.seedling ? "rgba(255, 86, 34, 0.05)" : "rgba(255, 248, 220, 0.05)";
         }
 
-        const colors = {
-            a: 'rgb(10, 11, 11)',
-            b: 'rgba(10, 10, 10)'
-        };
-
-        this.fillStyle = this.fillStyle === colors.a ? colors.b : colors.a;
+        this.fillStyle = this.fillStyle === this.colors.a ? this.colors.b : this.colors.a;
 
         const chunk = {
             id: Math.random().toString(36).substring(2, 9),
@@ -757,6 +754,7 @@ class Chunker {
                 this.connect(
                     cell?.source,
                     cell,
+                    chunk,
                     context
                 );
             };
@@ -768,6 +766,7 @@ class Chunker {
     connect = (
         source = {},
         target = {},
+        chunk,
         context
     ) => {
         if (!source?.position) return;
@@ -798,7 +797,7 @@ class Chunker {
                     y0 !== y1
                 )
             ) {
-                context.fillStyle = 'rgba(50, 0, 0, 0.12)';
+                context.fillStyle = chunk.fillStyle === this.colors.a ? this.colors.b : this.colors.a;
 
                 context.fillRect(
                     x0 * this.cellSize,
@@ -869,7 +868,7 @@ export default class Canvas {
             this.cellSize
         );
     };
-    
+
     handleVisibilityChange = () => {
         if (document.visibilityState === "visible") {
             this.resume();
