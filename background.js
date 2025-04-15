@@ -908,7 +908,7 @@ class Chunker {
             const target = current.position.y + this.radius;
 
             if (cell.position.y <= target) {
-                cell.fillStyle = "rgba(255, 87, 34, 0.1)";
+                cell.fillStyle = "rgba(255, 87, 34, 0.05)";
 
                 seeds.push({
                     index,
@@ -930,7 +930,7 @@ class Chunker {
         for (let cell of cells) {
             cell.position.x += Math.floor(offset?.position?.x ?? 0);
             cell.position.y += Math.floor(offset?.position?.y ?? 0);
-            cell.fillStyle = cell?.seedling ? "rgba(255, 87, 34, 0.1)" : "rgba(255, 248, 220, 0.1)";
+            cell.fillStyle = cell?.seedling ? "rgba(255, 87, 34, 0.05)" : "rgba(255, 248, 220, 0.05)";
         }
 
         const colors = {
@@ -1137,7 +1137,7 @@ class Chunker {
             );
 
             for (const cell of chunk.cells) {
-                context.fillStyle = cell?.fillStyle || "rgba(255, 255, 255, 0.1)";
+                context.fillStyle = cell?.fillStyle || "rgba(255, 248, 220, 0.05)";
 
                 context.fillRect(
                     Math.floor(cell.position.x * this.cellSize),
