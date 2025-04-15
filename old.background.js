@@ -5174,3 +5174,329 @@ class PoissonDiskSampler {
     }
 }
 */
+
+        /*
+        console.log("DEBUG::plant::***************");
+        console.log("DEBUG::plant::seeds", JSON.stringify(seeds));
+        console.log("DEBUG::plant::offset.position", offset.position);
+        console.log("DEBUG::plant::this.rows", this.rows);
+        console.log("DEBUG::plant::this.columns", this.columns);
+
+        const samples = [];
+        const active = [];
+
+        const padding = Math.max(...seeds.map(seed => seed?.position?.y ?? 0)) + 1;
+        const length = this.rows + padding;
+
+        const grid = Array.from({
+            length,
+        }, () => 
+            Array(this.columns).fill(null)
+        );
+
+        // console.log("DEBUG::grid", grid.length, grid[0].length, padding);
+
+        // TODO : DEBUGGING
+
+        const isValid = (row, column, seedling = false) => {
+            if(seedling) return true;
+
+            console.log("DEBUG::isValid::row", row);
+            console.log("DEBUG::isValid::this.rows", this.rows);
+            console.log("DEBUG::isValid::offset.position.y", offset.position.y);
+
+            // NOTE : PREVENT NEW CANDIDATES FROM APPEARING ABOVE THE CHUNK
+            if (
+                row < 0 ||
+                column < 0
+            ) return false;
+
+            // console.log("DEBUG::isValid::this.rows - offset.position.y", this.rows - offset.position.y);
+            // console.log("DEBUG::isValid::offset.position.y - this.rows", offset.position.y - this.rows);
+
+            // NOTE : PREVENT NEW CANDIDATES FROM APPEARING BELOW THE CHUNK
+            // if (row >= this.rows) return false;
+            if (row >= offset.position.y + this.rows) return false;
+            // if (row >= offset.position.y) return false;
+
+            // NOTE : PREVENT NEW CANDIDATES FROM APPEARING TO THE RIGHT OF THE CHUNK
+            if (column >= this.columns) return false;
+
+            for (let r = -this.radius; r <= this.radius; r++) {
+                for (let c = -this.radius; c <= this.radius; c++) {
+                    const nr = row + r;
+                    const nc = column + c;
+
+                    if (
+                        nr < 0 ||
+                        nc < 0
+                    ) continue;
+
+                    // NOTE : ALLOW LOW POINTS TO CHECK THE SEED AREA FOR OVERLAP
+                    if (nr >= grid.length) continue;
+
+                    if (nc >= this.columns) continue;
+
+                    const neighbor = grid[nr][nc];
+    
+                    if (neighbor !== null) {
+                        const dr = nr - row;
+                        const dc = nc - column;
+                        const distSq = dr * dr + dc * dc;
+
+                        if (distSq < this.radius * this.radius) {
+                            return false;
+                        }
+                    }
+                }
+            }
+            
+            return true;
+        }
+
+        for (const seed of seeds) {
+            seed.position.y = seed.position.y + this.rows;
+
+            console.log("DEBUG::seed.position.y", seed.position.y);
+            // console.log("DEBUG::seed.position.x", seed.position.x);
+            // console.log("DEBUG::seed.position.y - offset.position.y", seed.position.y - offset.position.y);
+            // const y = seed.position.y - offset.position.y;
+            // const y = seed.position.y + this.rows;
+
+            grid[seed.position.y][seed.position.x] = seed;
+            // grid[seed.position.y - offset.position.y][seed.position.x] = seed;
+            // grid[seed.position.y][seed.position.x] = seed;
+            // grid[seed.position.y - offset.position.y][seed.position.x] = seed;
+
+            // cell.position.y + this.rows
+            // cell.position.y 
+
+            active.push({
+                ...seed,
+                seedling: true,
+            });
+
+            samples.push({
+                ...seed,
+                seedling: true,
+            });
+        }
+
+        let safety = 0;
+
+        while (
+            active.length > 0
+            && safety <= 100
+        ) {
+            const id = Math.floor(Math.random() * active.length);
+            const point = active[id];
+
+            let found = false;
+
+            for (let index = 0; index < this.limit; index++) {
+                console.log("DEBUG::for::----------------------")
+
+                // const offscreen = 0 > (this.rows - point.position.y);
+                // const offscreen = 0 > (point.position.y - offset.position.y);
+                // console.log("DEBUG::", point.position.y - offset.position.y);
+                // throw new Error('halt');
+
+                const angle = Math.random() * 2 * Math.PI;
+                const distance = this.radius + Math.random();
+
+                const offsets = {
+                    vertical: Math.round(distance * Math.sin(angle)),
+                    horizontal: Math.round(distance * Math.cos(angle))
+                };
+
+                const candidate = {
+                    position: {
+                        x: point.position.x + offsets.vertical,
+                        y: (point.position.y - offset.position.y) + this.rows + offsets.horizontal,
+                        // y: point.position.y + offsets.horizontal,
+                        // y: (point.position.y - offset.position.y) + offsets.horizontal,
+                    },
+                };
+
+                // const offscreen = 0 > candidate.position.y ;
+                const passed = isValid(candidate.position.y, candidate.position.x);
+
+                console.log("DEBUG::candidate.position", candidate.position);
+                // console.log("DEBUG::offscreen", offscreen);
+                console.log("DEBUG::passed", passed);
+
+                if (
+                    // !offscreen &&
+                    // isValid(candidate.position.y, candidate.position.x)
+                    // isValid((candidate.position.y - offset.position.y), candidate.position.x)
+                    passed
+                ) {
+                    console.log("DEBUG::isValid::candidate.position.y", candidate.position.y);
+
+                    grid[candidate.position.y][candidate.position.x] = candidate;
+                    // grid[candidate.position.y - offset.position.y][candidate.position.x] = candidate;
+
+                    samples.push(candidate);
+                    // samples.push({
+                    //     position: {
+                    //         x: candidate.position.x,
+                    //         y: candidate.position.y + offset.position.y + 
+                    //     },
+                    // });
+
+                    active.push(candidate);
+                    // active.push({
+                    //     position: {
+                    //         x: candidate.position.x,
+                    //         y: candidate.position.y
+                    //     },
+                    // });
+
+                    found = true;
+
+                    break;
+                }
+
+                safety++;
+            }
+
+            if (!found) {
+                active.splice(id, 1);
+            }
+        }
+
+        // if(safety >= 2000) {
+        //     console.warn('Infinite loop imminent!');
+        // }
+
+        this.samples = samples.map(sample => sample.position.y - offset.position.y);
+
+        return samples;
+        */
+
+        /*
+        const samples = [];
+        const active = [];
+
+        const padding = Math.max(...seeds.map(seed => seed.position.y)) - Math.min(...seeds.map(seed => seed.position.y)) + 1;
+
+        console.log("DEBUG::", Math.floor(offset?.position?.y ?? 0));
+
+        const grid = Array.from({
+            length: this.rows + padding
+        }, () => 
+            Array(this.columns).fill(null)
+        );
+
+        const isValid = (row, column, seedling = false) => {
+            if(seedling) return true;
+
+            // NOTE : PREVENT NEW CANDIDATES FROM APPEARING ABOVE THE CHUNK
+            if (
+                row < 0 ||
+                column < 0
+            ) return false;
+
+            // NOTE : PREVENT NEW CANDIDATES FROM APPEARING BELOW THE CHUNK
+            if (row >= this.rows) return false;
+
+            // NOTE : PREVENT NEW CANDIDATES FROM APPEARING TO THE RIGHT OF THE CHUNK
+            if (column >= this.columns) return false;
+
+            for (let r = -this.radius; r <= this.radius; r++) {
+                for (let c = -this.radius; c <= this.radius; c++) {
+                    const nr = row + r;
+                    const nc = column + c;
+
+                    if (
+                        nr < 0 ||
+                        nc < 0
+                    ) continue;
+
+                    // NOTE : ALLOW LOW POINTS TO CHECK THE SEED AREA FOR OVERLAP
+                    if (nr >= grid.length) continue;
+
+                    if (nc >= this.columns) continue;
+
+                    const neighbor = grid[nr][nc];
+    
+                    if (neighbor !== null) {
+                        const dr = nr - row;
+                        const dc = nc - column;
+                        const distSq = dr * dr + dc * dc;
+    
+                        if (distSq < this.radius * this.radius) {
+                            return false;
+                        }
+                    }
+                }
+            }
+    
+            return true;
+        }
+
+        for (const seed of seeds) {
+            grid[seed.position.y][seed.position.x] = seed;
+
+            active.push({
+                ...seed,
+                seedling: true,
+            });
+
+            samples.push({
+                ...seed,
+                seedling: true,
+            });
+        }
+
+        while (active.length > 0) {
+            const id = Math.floor(Math.random() * active.length);
+            const point = active[id];
+
+            let found = false;
+
+            for (let index = 0; index < this.limit; index++) {
+                const offscreen = 0 > (this.rows - point.position.y);
+
+                const angle = Math.random() * 2 * Math.PI;
+                const distance = this.radius + Math.random();
+
+                const offsets = {
+                    vertical: Math.round(distance * Math.sin(angle)),
+                    horizontal: Math.round(distance * Math.cos(angle))
+                };
+
+                const candidate = {
+                    position: {
+                        x: point.position.x + offsets.vertical,
+                        y: point.position.y + offsets.horizontal,
+                    },
+                };
+
+                if (
+                    !offscreen &&
+                    isValid(candidate.position.y, candidate.position.x)
+                ) {
+                    grid[candidate.position.y][candidate.position.x] = candidate;
+
+                    samples.push(candidate);
+                    active.push(candidate);
+
+                    found = true;
+
+                    break;
+                }
+            }
+
+            if (!found) {
+                active.splice(id, 1);
+            }
+        }
+
+        this.samples = samples;
+
+        return samples;
+        */
+
+
+        

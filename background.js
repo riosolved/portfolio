@@ -695,21 +695,23 @@ class PoissonDiskSampler {
         };
     }
 
-    // TODO : ISSUE ON THE THIRD PLUS CHUNKS, AS THE SEED POSITIONS, COLORED BLACK, DO NOT CORRESPOND TO THEIR SOURCE, COLORED RED
-    plant = (seeds, offset) => {
+    plant = (
+        seeds,
+        offset = { position: { y: 0 } }
+    ) => {
         const samples = [];
         const active = [];
 
-        const padding = Math.max(...seeds.map(seed => seed.position.y)) - Math.min(...seeds.map(seed => seed.position.y)) + 1;
+        const padding = Math.max(...seeds.map(seed => seed.position.y)) + 1;
 
         const grid = Array.from({
-            length: this.rows + padding
-        }, () => 
+            length: (this.rows - offset.position.y) + padding
+        }, () =>
             Array(this.columns).fill(null)
         );
 
         const isValid = (row, column, seedling = false) => {
-            if(seedling) return true;
+            if (seedling) return true;
 
             // NOTE : PREVENT NEW CANDIDATES FROM APPEARING ABOVE THE CHUNK
             if (
@@ -739,23 +741,25 @@ class PoissonDiskSampler {
                     if (nc >= this.columns) continue;
 
                     const neighbor = grid[nr][nc];
-    
+
                     if (neighbor !== null) {
                         const dr = nr - row;
                         const dc = nc - column;
                         const distSq = dr * dr + dc * dc;
-    
+
                         if (distSq < this.radius * this.radius) {
                             return false;
                         }
                     }
                 }
             }
-    
+
             return true;
         }
 
         for (const seed of seeds) {
+            seed.position.y = seed.position.y - offset.position.y;
+
             grid[seed.position.y][seed.position.x] = seed;
 
             active.push({
@@ -763,10 +767,11 @@ class PoissonDiskSampler {
                 seedling: true,
             });
 
-            samples.push({
-                ...seed,
-                seedling: true,
-            });
+            // TODO : IN HERE FOR DEBUGGING PURPOSES
+            // samples.push({
+            //     ...seed,
+            //     seedling: true,
+            // });
         }
 
         while (active.length > 0) {
@@ -776,8 +781,6 @@ class PoissonDiskSampler {
             let found = false;
 
             for (let index = 0; index < this.limit; index++) {
-                const offscreen = 0 > (this.rows - point.position.y);
-
                 const angle = Math.random() * 2 * Math.PI;
                 const distance = this.radius + Math.random();
 
@@ -794,7 +797,6 @@ class PoissonDiskSampler {
                 };
 
                 if (
-                    !offscreen &&
                     isValid(candidate.position.y, candidate.position.x)
                 ) {
                     grid[candidate.position.y][candidate.position.x] = candidate;
@@ -862,8 +864,8 @@ class Chunker {
         }
 
         const colors = {
-            a: 'rgba(139, 226, 255, 0.5)',
-            b: 'rgba(0, 179, 255, 0.5)'
+            a: 'rgb(11, 11, 11)',
+            b: 'rgb(12, 12, 12)'
         }
 
         this.fillStyle = this.fillStyle === colors.a ? colors.b : colors.a;
@@ -906,14 +908,13 @@ class Chunker {
             const target = current.position.y + this.radius;
 
             if (cell.position.y <= target) {
-                // NOTE : ONLY IN HERE FOR DEBUGGING PURPOSES
-                current.cells[index].fillStyle = 'red';
+                cell.fillStyle = "rgba(255, 87, 34, 0.1)";
 
                 seeds.push({
                     index,
                     position: {
                         x: cell.position.x,
-                        y: cell.position.y + this.rows
+                        y: cell.position.y
                     },
                 });
             }
@@ -923,18 +924,18 @@ class Chunker {
 
         const cells = sampler.plant(
             seeds,
-            offset // this.rows
+            offset
         );
 
         for (let cell of cells) {
             cell.position.x += Math.floor(offset?.position?.x ?? 0);
             cell.position.y += Math.floor(offset?.position?.y ?? 0);
-            cell.fillStyle = cell?.seedling ? "black" : "yellow";
+            cell.fillStyle = cell?.seedling ? "rgba(255, 87, 34, 0.1)" : "rgba(255, 248, 220, 0.1)";
         }
 
         const colors = {
-            a: 'rgba(139, 226, 255, 0.5)',
-            b: 'rgba(0, 179, 255, 0.5)'
+            a: 'rgb(11, 11, 11)',
+            b: 'rgb(12, 12, 12)'
         }
 
         this.fillStyle = this.fillStyle === colors.a ? colors.b : colors.a;
@@ -997,14 +998,13 @@ class Chunker {
                 const bottom = chunk.position.y + chunk.height;
                 const half = Math.floor(this.rows / 2);
 
-                if(
+                if (
                     !chunk.hasCreatedNewChunk &&
                     chunk.index > 0 &&
                     bottom >= half
                 ) {
                     chunk.hasCreatedNewChunk = true;
 
-                    // TODO : ISSUE HERE
                     this.createChunkOffScreen_v2(
                         chunk,
                         {
@@ -1013,13 +1013,6 @@ class Chunker {
                             }
                         }
                     );
-
-                    // TODO : REMOVE ONCE WE HAVE TRUE INFINITE POISSON DISK SAMPLING
-                    // this.createChunkOffScreen({
-                    //     position: {
-                    //         y: chunk.position.y - chunk.height
-                    //     }
-                    // });
                 }
 
                 chunk.position.y += units;
@@ -1144,7 +1137,7 @@ class Chunker {
             );
 
             for (const cell of chunk.cells) {
-                context.fillStyle = cell?.fillStyle || "white";
+                context.fillStyle = cell?.fillStyle || "rgba(255, 255, 255, 0.1)";
 
                 context.fillRect(
                     Math.floor(cell.position.x * this.cellSize),
