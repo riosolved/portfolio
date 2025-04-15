@@ -13,7 +13,7 @@ const prefabs = [
     [[0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0], [0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0], [0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0], [0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0], [0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0], [0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0], [0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0], [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0], [0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]],
     [[0, 0, 1, 1, 1, 1, 0, 0, 0, 0], [0, 1, 1, 1, 1, 1, 1, 0, 0, 0], [0, 1, 1, 1, 1, 1, 1, 1, 0, 0], [1, 1, 1, 1, 1, 1, 1, 1, 1, 1]],
     [[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0], [0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0], [0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0], [0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0], [0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1], [0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0], [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0], [0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0], [0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]],
-    [[0,0,0,0,0,0,0,0,0,0,0,1,1,1,0,0,0,0,0,0,0,0,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,0,0,0,0,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0],[0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0],[0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0],[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0],[0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0],[0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]]    
+    [[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0], [0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0], [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1], [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1], [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1], [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0], [0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0], [0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]]
 ];
 
 /*
@@ -595,7 +595,7 @@ class PoissonDiskSampler {
         this.samples = [];
     }
 
-    isValid(row, column) {
+    isValid = (row, column) => {
         if (row < 0 || column < 0 || row >= this.rows || column >= this.columns) {
             return false;
         }
@@ -624,7 +624,7 @@ class PoissonDiskSampler {
         return true;
     }
 
-    sample(origin) {
+    sample = (origin) => {
         const samples = [];
         const active = [];
 
@@ -678,6 +678,145 @@ class PoissonDiskSampler {
 
         return samples;
     }
+
+    place = (point) => {
+        const distance = this.radius + Math.random();
+
+        const offsets = {
+            vertical: Math.round(distance * Math.sin(angle)),
+            horizontal: Math.round(distance * Math.cos(angle))
+        };
+
+        return {
+            position: {
+                x: point.position.x + offsets.vertical,
+                y: point.position.y + offsets.horizontal
+            }
+        };
+    }
+
+    // TODO : ISSUE ON THE THIRD PLUS CHUNKS, AS THE SEED POSITIONS, COLORED BLACK, DO NOT CORRESPOND TO THEIR SOURCE, COLORED RED
+    plant = (seeds, offset) => {
+        const samples = [];
+        const active = [];
+
+        const padding = Math.max(...seeds.map(seed => seed.position.y)) - Math.min(...seeds.map(seed => seed.position.y)) + 1;
+
+        const grid = Array.from({
+            length: this.rows + padding
+        }, () => 
+            Array(this.columns).fill(null)
+        );
+
+        const isValid = (row, column, seedling = false) => {
+            if(seedling) return true;
+
+            // NOTE : PREVENT NEW CANDIDATES FROM APPEARING ABOVE THE CHUNK
+            if (
+                row < 0 ||
+                column < 0
+            ) return false;
+
+            // NOTE : PREVENT NEW CANDIDATES FROM APPEARING BELOW THE CHUNK
+            if (row >= this.rows) return false;
+
+            // NOTE : PREVENT NEW CANDIDATES FROM APPEARING TO THE RIGHT OF THE CHUNK
+            if (column >= this.columns) return false;
+
+            for (let r = -this.radius; r <= this.radius; r++) {
+                for (let c = -this.radius; c <= this.radius; c++) {
+                    const nr = row + r;
+                    const nc = column + c;
+
+                    if (
+                        nr < 0 ||
+                        nc < 0
+                    ) continue;
+
+                    // NOTE : ALLOW LOW POINTS TO CHECK THE SEED AREA FOR OVERLAP
+                    if (nr >= grid.length) continue;
+
+                    if (nc >= this.columns) continue;
+
+                    const neighbor = grid[nr][nc];
+    
+                    if (neighbor !== null) {
+                        const dr = nr - row;
+                        const dc = nc - column;
+                        const distSq = dr * dr + dc * dc;
+    
+                        if (distSq < this.radius * this.radius) {
+                            return false;
+                        }
+                    }
+                }
+            }
+    
+            return true;
+        }
+
+        for (const seed of seeds) {
+            grid[seed.position.y][seed.position.x] = seed;
+
+            active.push({
+                ...seed,
+                seedling: true,
+            });
+
+            samples.push({
+                ...seed,
+                seedling: true,
+            });
+        }
+
+        while (active.length > 0) {
+            const id = Math.floor(Math.random() * active.length);
+            const point = active[id];
+
+            let found = false;
+
+            for (let index = 0; index < this.limit; index++) {
+                const offscreen = 0 > (this.rows - point.position.y);
+
+                const angle = Math.random() * 2 * Math.PI;
+                const distance = this.radius + Math.random();
+
+                const offsets = {
+                    vertical: Math.round(distance * Math.sin(angle)),
+                    horizontal: Math.round(distance * Math.cos(angle))
+                };
+
+                const candidate = {
+                    position: {
+                        x: point.position.x + offsets.vertical,
+                        y: point.position.y + offsets.horizontal,
+                    },
+                };
+
+                if (
+                    !offscreen &&
+                    isValid(candidate.position.y, candidate.position.x)
+                ) {
+                    grid[candidate.position.y][candidate.position.x] = candidate;
+
+                    samples.push(candidate);
+                    active.push(candidate);
+
+                    found = true;
+
+                    break;
+                }
+            }
+
+            if (!found) {
+                active.splice(id, 1);
+            }
+        }
+
+        this.samples = samples;
+
+        return samples;
+    }
 }
 
 class Chunker {
@@ -691,16 +830,19 @@ class Chunker {
         this.lastTimestamp = null;
         this.chunks = [];
 
-        this.createChunkOnScreen();
+        const chunk = this.createChunkOnScreen();
 
-        this.createChunkOffScreen({
-            position: {
-                y: -this.rows
+        this.createChunkOffScreen_v2(
+            chunk,
+            {
+                position: {
+                    y: -this.rows
+                }
             }
-        });
+        );
     }
 
-    chunk(offset = {position: {x: 0, y: 0}}) {
+    chunk(offset = { position: { x: 0, y: 0 } }) {
         const sampler = new PoissonDiskSampler(
             this.columns,
             this.rows,
@@ -720,8 +862,8 @@ class Chunker {
         }
 
         const colors = {
-            a: 'rgba(0, 0, 255, 0.5)',
-            b: 'rgba(0, 255, 255, 0.5)'
+            a: 'rgba(139, 226, 255, 0.5)',
+            b: 'rgba(0, 179, 255, 0.5)'
         }
 
         this.fillStyle = this.fillStyle === colors.a ? colors.b : colors.a;
@@ -745,6 +887,8 @@ class Chunker {
         const chunk = this.chunk();
 
         this.chunks.push(chunk);
+
+        return chunk;
     }
 
     createChunkOffScreen = (offset) => {
@@ -753,6 +897,65 @@ class Chunker {
         this.chunks.push(chunk);
 
         this.stitch();
+    }
+
+    createChunkOffScreen_v2 = (current, offset) => {
+        const seeds = [];
+
+        current.cells.forEach((cell, index) => {
+            const target = current.position.y + this.radius;
+
+            if (cell.position.y <= target) {
+                // NOTE : ONLY IN HERE FOR DEBUGGING PURPOSES
+                current.cells[index].fillStyle = 'red';
+
+                seeds.push({
+                    index,
+                    position: {
+                        x: cell.position.x,
+                        y: cell.position.y + this.rows
+                    },
+                });
+            }
+        });
+
+        const sampler = new PoissonDiskSampler(this.columns, this.rows, this.radius);
+
+        const cells = sampler.plant(
+            seeds,
+            offset // this.rows
+        );
+
+        for (let cell of cells) {
+            cell.position.x += Math.floor(offset?.position?.x ?? 0);
+            cell.position.y += Math.floor(offset?.position?.y ?? 0);
+            cell.fillStyle = cell?.seedling ? "black" : "yellow";
+        }
+
+        const colors = {
+            a: 'rgba(139, 226, 255, 0.5)',
+            b: 'rgba(0, 179, 255, 0.5)'
+        }
+
+        this.fillStyle = this.fillStyle === colors.a ? colors.b : colors.a;
+
+        const chunk = {
+            id: Math.random().toString(36).substring(2, 9),
+            index: this.chunks.length,
+            hasCreatedNewChunk: false,
+            width: this.columns,
+            height: this.rows,
+            cells,
+            fillStyle: this.fillStyle,
+            position: {
+                x: Math.floor(offset?.position?.x ?? 0), // In term of grid units.
+                y: Math.floor(offset?.position?.y ?? 0) // In term of grid units.
+            }
+        };
+
+        this.chunks.push(chunk);
+
+        return chunk;
     }
 
     removeChunk = (id) => {
@@ -778,13 +981,13 @@ class Chunker {
         const steps = Math.floor(this.accumulatedTime / duration) * units;
 
         if (steps > 0) {
-            if(!(this.chunks.length > 0)) {
+            if (!(this.chunks.length > 0)) {
                 return;
             }
 
             for (let chunk of this.chunks) {
                 // NOTE : REMOVE CHUNKS
-                if(chunk.position.y > this.rows) {
+                if (chunk.position.y > this.rows) {
                     this.removeChunk(chunk.id);
 
                     continue;
@@ -801,11 +1004,22 @@ class Chunker {
                 ) {
                     chunk.hasCreatedNewChunk = true;
 
-                    this.createChunkOffScreen({
-                        position: {
-                            y: chunk.position.y - chunk.height
+                    // TODO : ISSUE HERE
+                    this.createChunkOffScreen_v2(
+                        chunk,
+                        {
+                            position: {
+                                y: chunk.position.y - chunk.height
+                            }
                         }
-                    });
+                    );
+
+                    // TODO : REMOVE ONCE WE HAVE TRUE INFINITE POISSON DISK SAMPLING
+                    // this.createChunkOffScreen({
+                    //     position: {
+                    //         y: chunk.position.y - chunk.height
+                    //     }
+                    // });
                 }
 
                 chunk.position.y += units;
@@ -834,7 +1048,7 @@ class Chunker {
             const target = next.position.y + (next.height - this.radius);
 
             if (cell.position.y >= target) {
-                if(cell.position.y <= next.ceiling) {
+                if (cell.position.y <= next.ceiling) {
                     next.ceiling = cell.position.y;
                 }
 
@@ -890,14 +1104,14 @@ class Chunker {
         const radiusSquared = this.radius * this.radius;
 
         // NOTE : ONLY COMPARING NEXT
-        for(const candidate of points) {
-            if(candidate.chunk.type === 'current') {
+        for (const candidate of points) {
+            if (candidate.chunk.type === 'current') {
                 continue;
             }
 
             // NOTE : COMPARE NEXT POINTS AGAINST CURRENT POINTS 
-            for(const point of points) {
-                if(point.chunk.type === 'next') {
+            for (const point of points) {
+                if (point.chunk.type === 'next') {
                     continue;
                 }
 
@@ -905,7 +1119,7 @@ class Chunker {
                 const dy = candidate.position.normalized.y - point.position.normalized.y;
 
                 const distanceSquared = dx * dx + dy * dy;
-          
+
                 if (distanceSquared < radiusSquared) {
                     violations.push(candidate.index);
                 }
@@ -922,12 +1136,12 @@ class Chunker {
             context.fillStyle = chunk?.fillStyle || "white";
 
             // NOTE : ONLY IN HERE FOR DEBUGGING PURPOSES
-            // context.fillRect(
-            //     Math.floor(chunk.position.x * this.cellSize),
-            //     Math.floor(chunk.position.y * this.cellSize),
-            //     Math.floor(chunk.width * this.cellSize),
-            //     Math.floor(chunk.height * this.cellSize),
-            // );
+            context.fillRect(
+                Math.floor(chunk.position.x * this.cellSize),
+                Math.floor(chunk.position.y * this.cellSize),
+                Math.floor(chunk.width * this.cellSize),
+                Math.floor(chunk.height * this.cellSize),
+            );
 
             for (const cell of chunk.cells) {
                 context.fillStyle = cell?.fillStyle || "white";
