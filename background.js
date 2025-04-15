@@ -524,10 +524,14 @@ class PoissonDiskSampler {
 class Chunker {
     colors = {
         chunk: {
-            current: 'rgba(11, 11, 11)',
-            next: 'rgba(12, 12, 12)',
+            current: 'rgb(15, 15, 15)',
+            next: 'rgb(12, 12, 12)',
         },
-        cell: "rgb(25, 25, 25)"
+        cell: {
+            seed: "#ff5722",
+            regular: "cornsilk"
+        },
+        line: "rgba(255, 248, 220, 0.1)"
     };
 
     fillStyle = this.colors.chunk.current;
@@ -571,7 +575,7 @@ class Chunker {
         for (let cell of cells) {
             cell.position.x += Math.floor(offset?.position?.x ?? 0);
             cell.position.y += Math.floor(offset?.position?.y ?? 0);
-            cell.fillStyle = "rgba(255, 248, 220, 0.05)";
+            cell.fillStyle = this.colors.cell.regular;
         }
 
         this.fillStyle = this.fillStyle === this.colors.chunk.current ? this.colors.chunk.next : this.colors.chunk.current;
@@ -637,7 +641,7 @@ class Chunker {
         for (let cell of cells) {
             cell.position.x += Math.floor(offset?.position?.x ?? 0);
             cell.position.y += Math.floor(offset?.position?.y ?? 0);
-            cell.fillStyle = cell?.seedling ? "rgb(45, 45, 45)" : this.colors.cell;
+            cell.fillStyle = cell?.seedling ? this.colors.cell.seed : this.colors.cell.regular;
         }
 
         this.fillStyle = this.fillStyle === this.colors.chunk.current ? this.colors.chunk.next : this.colors.chunk.current;
@@ -798,7 +802,7 @@ class Chunker {
                     y0 !== y1
                 )
             ) {
-                context.fillStyle = 'rgba(10, 10, 10)';
+                context.fillStyle = this.colors.line;
 
                 context.fillRect(
                     x0 * this.cellSize,
@@ -835,14 +839,14 @@ export default class Canvas {
     cellSize = 5;
 
     drawGrid = () => {
-        this.context.strokeStyle = "rgb(9, 9, 9)";
+        this.context.strokeStyle = "rgb(0, 0, 0)";
 
         for (let i = 0; i <= this.columns; i++) {
             const x = i * this.cellSize;
 
             this.context.beginPath();
             this.context.moveTo(x, 0);
-            this.context.lineTo(x, this.element.height);
+            this.context.lineTo(x, this.canvas.height);
             this.context.stroke();
         }
 
@@ -851,17 +855,17 @@ export default class Canvas {
 
             this.context.beginPath();
             this.context.moveTo(0, y);
-            this.context.lineTo(this.element.width, y);
+            this.context.lineTo(this.canvas.width, y);
             this.context.stroke();
         }
     }
 
     handleResize = () => {
-        this.element.width = window.innerWidth;
-        this.element.height = window.innerHeight;
+        this.canvas.width = window.innerWidth;
+        this.canvas.height = window.innerHeight;
 
-        this.rows = Math.floor(this.element.height / this.cellSize);
-        this.columns = Math.floor(this.element.width / this.cellSize);
+        this.rows = Math.floor(this.canvas.height / this.cellSize);
+        this.columns = Math.floor(this.canvas.width / this.cellSize);
 
         this.chunker = new Chunker(
             this.columns,
@@ -899,18 +903,30 @@ export default class Canvas {
     }
 
     initialize = () => {
-        this.element = document.createElement("canvas");
-        this.element.id = "background";
-        this.context = this.element.getContext("2d");
+        this.canvas = document.createElement("canvas");
+        this.container = document.createElement("div");
+        this.noise = document.createElement("div");
+        this.overlay = document.createElement("div");
+
+        this.container.className = "background container";
+        this.noise.className = "background noise";
+        this.overlay.className = "background overlay";
+        this.canvas.className = "background canvas";
+
+        this.context = this.canvas.getContext("2d");
         this.context.imageSmoothingEnabled = false;
 
-        document.body.appendChild(this.element);
+        this.container.appendChild(this.overlay);
+        this.container.appendChild(this.noise);
+        this.container.appendChild(this.canvas);
 
-        this.element.width = window.innerWidth;
-        this.element.height = window.innerHeight;
+        document.body.appendChild(this.container);
 
-        this.rows = Math.floor(this.element.height / this.cellSize);
-        this.columns = Math.floor(this.element.width / this.cellSize);
+        this.canvas.width = window.innerWidth;
+        this.canvas.height = window.innerHeight;
+
+        this.rows = Math.floor(this.canvas.height / this.cellSize);
+        this.columns = Math.floor(this.canvas.width / this.cellSize);
 
         window.addEventListener("resize", this.handleResize);
         window.addEventListener("visibilitychange", this.handleVisibilityChange);
@@ -926,7 +942,7 @@ export default class Canvas {
 
     loop = (timestamp) => {
         this.context.fillStyle = this.backgroundColor;
-        this.context.fillRect(0, 0, this.element.width, this.element.height);
+        this.context.fillRect(0, 0, this.canvas.width, this.canvas.height);
 
         this.chunker.scrollDown(timestamp, 5, 100);
         this.chunker.draw(this.context);
