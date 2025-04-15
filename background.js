@@ -660,7 +660,11 @@ class PoissonDiskSampler {
                 if (this.isValid(candidate.position.y, candidate.position.x)) {
                     this.grid[candidate.position.y][candidate.position.x] = candidate;
 
-                    samples.push(candidate);
+                    samples.push({
+                        ...candidate,
+                        source: point
+                    });
+
                     active.push(candidate);
 
                     found = true;
@@ -767,11 +771,10 @@ class PoissonDiskSampler {
                 seedling: true,
             });
 
-            // TODO : IN HERE FOR DEBUGGING PURPOSES
-            // samples.push({
-            //     ...seed,
-            //     seedling: true,
-            // });
+            samples.push({
+                ...seed,
+                seedling: true,
+            });
         }
 
         while (active.length > 0) {
@@ -801,7 +804,11 @@ class PoissonDiskSampler {
                 ) {
                     grid[candidate.position.y][candidate.position.x] = candidate;
 
-                    samples.push(candidate);
+                    samples.push({
+                        ...candidate,
+                        source: point
+                    });
+
                     active.push(candidate);
 
                     found = true;
@@ -861,11 +868,12 @@ class Chunker {
         for (let cell of cells) {
             cell.position.x += Math.floor(offset?.position?.x ?? 0);
             cell.position.y += Math.floor(offset?.position?.y ?? 0);
+            cell.fillStyle = "rgba(255, 248, 220, 0.05)";
         }
 
         const colors = {
-            a: 'rgb(11, 11, 11)',
-            b: 'rgb(12, 12, 12)'
+            a: 'rgb(10, 10, 11)',
+            b: 'rgb(10, 10, 10)'
         }
 
         this.fillStyle = this.fillStyle === colors.a ? colors.b : colors.a;
@@ -878,6 +886,7 @@ class Chunker {
             height: this.rows,
             cells,
             fillStyle: this.fillStyle,
+            offset,
             position: {
                 x: Math.floor(offset?.position?.x ?? 0), // In term of grid units.
                 y: Math.floor(offset?.position?.y ?? 0) // In term of grid units.
@@ -930,12 +939,12 @@ class Chunker {
         for (let cell of cells) {
             cell.position.x += Math.floor(offset?.position?.x ?? 0);
             cell.position.y += Math.floor(offset?.position?.y ?? 0);
-            cell.fillStyle = cell?.seedling ? "rgba(255, 87, 34, 0.05)" : "rgba(255, 248, 220, 0.05)";
+            cell.fillStyle = cell?.seedling ? "rgba(255, 0, 166, 0.02)" : "rgba(255, 248, 220, 0.05)";
         }
 
         const colors = {
-            a: 'rgb(11, 11, 11)',
-            b: 'rgb(12, 12, 12)'
+            a: 'rgb(10, 10, 11)',
+            b: 'rgb(10, 10, 10)'
         }
 
         this.fillStyle = this.fillStyle === colors.a ? colors.b : colors.a;
@@ -948,6 +957,7 @@ class Chunker {
             height: this.rows,
             cells,
             fillStyle: this.fillStyle,
+            offset,
             position: {
                 x: Math.floor(offset?.position?.x ?? 0), // In term of grid units.
                 y: Math.floor(offset?.position?.y ?? 0) // In term of grid units.
@@ -1137,7 +1147,7 @@ class Chunker {
             );
 
             for (const cell of chunk.cells) {
-                context.fillStyle = cell?.fillStyle || "rgba(255, 248, 220, 0.05)";
+                context.fillStyle = cell.fillStyle;
 
                 context.fillRect(
                     Math.floor(cell.position.x * this.cellSize),
@@ -1145,9 +1155,76 @@ class Chunker {
                     Math.floor(this.cellSize),
                     Math.floor(this.cellSize),
                 );
-            }
+
+                this.connect(
+                    cell?.source,
+                    cell,
+                    context
+                );
+            };
 
             context.restore();
+        }
+    }
+
+    connect = (
+        source = {},
+        target = {},
+        context
+    ) => {
+        if (!source?.position) return;
+        if (!target?.position) return;
+
+        let {
+            x: x0,
+            y: y0,
+        } = source?.position ?? {};
+
+        let {
+            x: x1,
+            y: y1,
+        } = target?.position ?? {};
+
+        let deltaX = Math.abs(x1 - x0);
+        let deltaY = Math.abs(y1 - y0);
+        let stepX = x0 < x1 ? 1 : -1;
+        let stepY = y0 < y1 ? 1 : -1;
+        let error = deltaX - deltaY;
+
+        let isFirstStep = true;
+
+        while (true) {
+            if (
+                !isFirstStep && (
+                    x0 !== x1 ||
+                    y0 !== y1
+                )
+            ) {
+                context.fillStyle = 'rgba(23, 5, 5, 0.31)';
+
+                context.fillRect(
+                    x0 * this.cellSize,
+                    y0 * this.cellSize,
+                    this.cellSize,
+                    this.cellSize
+                );
+            }
+
+            isFirstStep = false;
+
+            if (x0 === x1 && y0 === y1) break;
+
+            let e2 = 2 * error;
+
+            if (e2 > -deltaY) {
+                error -= deltaY;
+                x0 += stepX;
+            }
+
+            if (e2 < deltaX) {
+                error += deltaX;
+                y0 += stepY;
+            }
         }
     }
 };
