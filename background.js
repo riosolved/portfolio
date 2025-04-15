@@ -1200,7 +1200,7 @@ class Chunker {
                     y0 !== y1
                 )
             ) {
-                context.fillStyle = 'rgba(85, 0, 100, 0.03)';
+                context.fillStyle = 'rgba(103, 8, 21, 0.06)';
 
                 context.fillRect(
                     x0 * this.cellSize,
