@@ -561,13 +561,13 @@ class Chunker {
         for (let cell of cells) {
             cell.position.x += Math.floor(offset?.position?.x ?? 0);
             cell.position.y += Math.floor(offset?.position?.y ?? 0);
-            cell.fillStyle = "rgba(255, 248, 220, 0.05)";
+            cell.fillStyle = "rgba(255, 248, 220, 0.02)";
         }
 
         const colors = {
-            a: 'rgb(10, 10, 12)',
-            b: 'rgb(9, 10, 11)'
-        }
+            a: 'rgb(10, 11, 11)',
+            b: 'rgba(10, 10, 10)'
+        };
 
         this.fillStyle = this.fillStyle === colors.a ? colors.b : colors.a;
 
@@ -632,13 +632,13 @@ class Chunker {
         for (let cell of cells) {
             cell.position.x += Math.floor(offset?.position?.x ?? 0);
             cell.position.y += Math.floor(offset?.position?.y ?? 0);
-            cell.fillStyle = cell?.seedling ? "rgba(255, 170, 0, 0.03)" : "rgba(255, 248, 220, 0.05)";
+            cell.fillStyle = cell?.seedling ? "rgba(78, 0, 0, 0.1)" : "rgba(255, 248, 220, 0.02)";
         }
 
         const colors = {
-            a: 'rgb(10, 10, 12)',
-            b: 'rgb(9, 10, 11)'
-        }
+            a: 'rgb(10, 11, 11)',
+            b: 'rgba(10, 10, 10)'
+        };
 
         this.fillStyle = this.fillStyle === colors.a ? colors.b : colors.a;
 
@@ -798,7 +798,7 @@ class Chunker {
                     y0 !== y1
                 )
             ) {
-                context.fillStyle = 'rgba(226, 90, 0, 0.02)';
+                context.fillStyle = 'rgba(50, 0, 0, 0.12)';
 
                 context.fillRect(
                     x0 * this.cellSize,
