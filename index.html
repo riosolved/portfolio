@@ -55,6 +55,37 @@
                 -->
             </div>
 
+            <div id="items">
+                <a href="https://github.com/riosolved" title="GitHub" rel="noopener noreferrer" target="_blank">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+                        <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                            stroke-width="2"
+                            d="M9 19c-4.3 1.4-4.3-2.5-6-3m12 5v-3.5c0-1 .1-1.4-.5-2c2.8-.3 5.5-1.4 5.5-6a4.6 4.6 0 0 0-1.3-3.2a4.2 4.2 0 0 0-.1-3.2s-1.1-.3-3.5 1.3a12.3 12.3 0 0 0-6.2 0C6.5 2.8 5.4 3.1 5.4 3.1a4.2 4.2 0 0 0-.1 3.2A4.6 4.6 0 0 0 4 9.5c0 4.6 2.7 5.7 5.5 6c-.6.6-.6 1.2-.5 2V21" />
+                    </svg>
+                </a>
+
+                <a href="https://www.linkedin.com/in/riosolved" title="LinkedIn" rel="noopener noreferrer"
+                    target="_blank">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+                        <g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                            stroke-width="2">
+                            <path d="M8 11v5m0-8v.01M12 16v-5m4 5v-3a2 2 0 1 0-4 0" />
+                            <path d="M3 7a4 4 0 0 1 4-4h10a4 4 0 0 1 4 4v10a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4z" />
+                        </g>
+                    </svg>
+                </a>
+
+                <a title="Resume">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+                        <g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                            stroke-width="2">
+                            <path d="M14 3v4a1 1 0 0 0 1 1h4" />
+                            <path d="M17 21H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h7l5 5v11a2 2 0 0 1-2 2" />
+                        </g>
+                    </svg>
+                </a>
+            </div>
+
             <!-- <div class="flex-1 flex flex-col p-[8px]" id="profile"> -->
             <div id="profile">
                 <!-- class="w-24 h-auto rounded" -->
@@ -69,12 +100,21 @@
                 <!-- <img src="/rios.jpg" alt="Example" class="mr-4 w-32 h-auto rounded" /> -->
 
                 <div id="about-me">
-                    <img src="/rios.jpg" alt="Example" class="float-right ml-4 ml-2 w-16 h-auto rounded" />
+                    <img src="/rios.jpg" alt="Example" class="float-left mr-3 mb-2 w-16 h-auto" />
                     <p class="text">
-                        Lorem ipsum dolor sit amet consectetur adipiscing elit. Quisque faucibus ex sapien vitae pellentesque sem placerat. In id cursus mi pretium tellus duis convallis.
+                        Lorem ipsum dolor sit amet consectetur adipiscing elit. Quisque faucibus ex sapien vitae
+                        pellentesque sem placerat. In id cursus mi pretium tellus duis convallis.
                     </p>
                 </div>
 
+                <div id="skills">
+                    <a target="_blank" rel="noopener noreferrer nofollow"
+                        href="https://camo.githubusercontent.com/ccbe828e30bf09fc30639d2fecff29958bef05977065d845c92cf5d0427e61cd/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f68746d6c352532302d2532334533344632362e7376673f267374796c653d666f722d7468652d6261646765266c6f676f3d68746d6c35266c6f676f436f6c6f723d7768697465"><img
+                            alt="HTML5"
+                            src="https://camo.githubusercontent.com/ccbe828e30bf09fc30639d2fecff29958bef05977065d845c92cf5d0427e61cd/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f68746d6c352532302d2532334533344632362e7376673f267374796c653d666f722d7468652d6261646765266c6f676f3d68746d6c35266c6f676f436f6c6f723d7768697465"
+                            data-canonical-src="https://img.shields.io/badge/html5%20-%23E34F26.svg?&amp;style=for-the-badge&amp;logo=html5&amp;logoColor=white"
+                            style="max-width: 100%;"></a>
+                </div>
 
 
 
@@ -98,18 +138,28 @@
         </div>
 
         <div id="content">
-            <div class="p-[8px]" x-show="application.state.route === '/home'">
-                <span class="text">
-                    Lorem ipsum dolor sit amet consectetur adipiscing elit. Quisque faucibus ex sapien vitae pellentesque sem placerat. In id cursus mi pretium tellus duis convallis. Tempus leo eu aenean sed diam urna tempor. Pulvinar vivamus fringilla lacus nec metus bibendum egestas. Iaculis massa nisl malesuada lacinia integer nunc posuere. Ut hendrerit semper vel class aptent taciti sociosqu. Ad litora torquent per conubia nostra inceptos himenaeos.
+            <!-- <div class="flex flex-wrap gap-x-3 gap-y-3 justify-evenly" id="home" -->
+            <div id="home"
+                x-show="application.state.route === '/home'">
+                <!-- application.state.route -->
+                <div class="projects">
+                    <template x-for="project in application.state.projects" :key="project.title">
+                        <div class="project card relative group">
+                            <img :src="project.image" alt="Example"
+                                class="w-50 h-32 object-cover rounded-t-md border border-[#09090a]" />
     
-                    Lorem ipsum dolor sit amet consectetur adipiscing elit. Quisque faucibus ex sapien vitae pellentesque sem placerat. In id cursus mi pretium tellus duis convallis. Tempus leo eu aenean sed diam urna tempor. Pulvinar vivamus fringilla lacus nec metus bibendum egestas. Iaculis massa nisl malesuada lacinia integer nunc posuere. Ut hendrerit semper vel class aptent taciti sociosqu. Ad litora torquent per conubia nostra inceptos himenaeos.
-                    
-                    Lorem ipsum dolor sit amet consectetur adipiscing elit. Quisque faucibus ex sapien vitae pellentesque sem placerat. In id cursus mi pretium tellus duis convallis. Tempus leo eu aenean sed diam urna tempor. Pulvinar vivamus fringilla lacus nec metus bibendum egestas. Iaculis massa nisl malesuada lacinia integer nunc posuere. Ut hendrerit semper vel class aptent taciti sociosqu. Ad litora torquent per conubia nostra inceptos himenaeos.
-                    
-                    Lorem ipsum dolor sit amet consectetur adipiscing elit. Quisque faucibus ex sapien vitae pellentesque sem placerat. In id cursus mi pretium tellus duis convallis. Tempus leo eu aenean sed diam urna tempor. Pulvinar vivamus fringilla lacus nec metus bibendum egestas. Iaculis massa nisl malesuada lacinia integer nunc posuere. Ut hendrerit semper vel class aptent taciti sociosqu. Ad litora torquent per conubia nostra inceptos himenaeos.
-                    
-                    Lorem ipsum dolor sit amet consectetur adipiscing elit. Quisque faucibus ex sapien vitae pellentesque sem placerat. In id cursus mi pretium tellus duis convallis. Tempus leo eu aenean sed diam urna tempor. Pulvinar vivamus fringilla lacus nec metus bibendum egestas. Iaculis massa nisl malesuada lacinia integer nunc posuere. Ut hendrerit semper vel class aptent taciti sociosqu. Ad litora torquent per conubia nostra inceptos himenaeos.
-                </span>
+                            <div class="card bottom flex flex-col rounded-b-md border border-t-0 border-[#09090a]">
+                                <span class="title" x-text="project.title"></span>
+                            </div>
+    
+                            <span
+                                class="description absolute rounded-md inset-0 bg-opacity-50 opacity-0 group-hover:opacity-100 group-hover:pointer-events-auto pointer-events-none"
+                                x-text="project.description"
+                            >
+                            </span>
+                        </div>
+                    </template>
+                </div>
             </div>
 
             <div x-show="application.state.route === '/projects'">
@@ -129,5 +179,4 @@
     <script type="module" src="/application.js"></script>
     <script type="module" src="/alpine.js"></script>
 </body>
-
 </html>
