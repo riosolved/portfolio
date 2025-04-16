@@ -6,13 +6,9 @@
       "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
     --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono",
       "Courier New", monospace;
-    --color-green-100: oklch(0.962 0.044 156.743);
-    --color-green-800: oklch(0.448 0.119 151.328);
     --color-blue-500: oklch(0.623 0.214 259.815);
-    --color-blue-600: oklch(0.546 0.245 262.881);
     --color-white: #fff;
     --spacing: 0.25rem;
-    --ease-out: cubic-bezier(0, 0, 0.2, 1);
     --default-transition-duration: 150ms;
     --default-transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
     --default-font-family: var(--font-sans);
@@ -186,9 +182,6 @@
       max-width: 96rem;
     }
   }
-  .mt-4 {
-    margin-top: calc(var(--spacing) * 4);
-  }
   .flex {
     display: flex;
   }
@@ -222,64 +215,22 @@
   .gap-x-4 {
     column-gap: calc(var(--spacing) * 4);
   }
-  .rounded {
-    border-radius: 0.25rem;
-  }
   .bg-blue-500 {
     background-color: var(--color-blue-500);
   }
-  .bg-green-100 {
-    background-color: var(--color-green-100);
-  }
-  .p-2 {
-    padding: calc(var(--spacing) * 2);
-  }
-  .p-4 {
-    padding: calc(var(--spacing) * 4);
+  .p-\[8px\] {
+    padding: 8px;
   }
   .px-4 {
     padding-inline: calc(var(--spacing) * 4);
   }
-  .text-green-800 {
-    color: var(--color-green-800);
-  }
   .text-white {
     color: var(--color-white);
-  }
-  .opacity-0 {
-    opacity: 0%;
-  }
-  .opacity-100 {
-    opacity: 100%;
   }
   .transition {
     transition-property: color, background-color, border-color, outline-color, text-decoration-color, fill, stroke, --tw-gradient-from, --tw-gradient-via, --tw-gradient-to, opacity, box-shadow, transform, translate, scale, rotate, filter, -webkit-backdrop-filter, backdrop-filter;
     transition-timing-function: var(--tw-ease, var(--default-transition-timing-function));
     transition-duration: var(--tw-duration, var(--default-transition-duration));
-  }
-  .transition-colors {
-    transition-property: color, background-color, border-color, outline-color, text-decoration-color, fill, stroke, --tw-gradient-from, --tw-gradient-via, --tw-gradient-to;
-    transition-timing-function: var(--tw-ease, var(--default-transition-timing-function));
-    transition-duration: var(--tw-duration, var(--default-transition-duration));
-  }
-  .duration-200 {
-    --tw-duration: 200ms;
-    transition-duration: 200ms;
-  }
-  .duration-300 {
-    --tw-duration: 300ms;
-    transition-duration: 300ms;
-  }
-  .ease-out {
-    --tw-ease: var(--ease-out);
-    transition-timing-function: var(--ease-out);
-  }
-  .hover\:bg-blue-600 {
-    &:hover {
-      @media (hover: hover) {
-        background-color: var(--color-blue-600);
-      }
-    }
   }
   .md\:flex-row {
     @media (width >= 48rem) {
@@ -326,7 +277,7 @@ html, body {
 }
 .ascii {
   line-height: 1.15;
-  font-size: 12px;
+  font-size: 10px;
   color: cornsilk;
   overflow-y: hidden;
   text-align: left !important;
@@ -406,9 +357,13 @@ html, body {
   background: #000000c4;
 }
 #header > #card {
-  margin: 11px;
-  margin-right: 0px;
-  margin-bottom: 0px;
+  margin-left: 11px;
+}
+#application .text {
+  font-family: 'Kode_Mono';
+  font-weight: bold;
+  color: #ff5722;
+  font-size: 0.75rem;
 }
 @media (max-width: 1280px) {
   .ascii {
@@ -424,13 +379,7 @@ html, body {
   }
   #header > #card {
     align-items: center;
+    margin: 0;
+    margin-top: 11px;
   }
-}
-@property --tw-duration {
-  syntax: "*";
-  inherits: false;
-}
-@property --tw-ease {
-  syntax: "*";
-  inherits: false;
 }
