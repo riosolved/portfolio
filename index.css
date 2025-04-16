@@ -90,17 +90,52 @@ body {
     pointer-events: none;
     height: 100%;
     width: 100%;
+    position: relative;
+    display: flex;
+    flex-wrap: nowrap;
 }
 
-#profile {
-    margin: 11px;
-    margin-right: 0px;
-    background: #0000006e;
+#application .text {
+    font-family: 'Kode_Mono';
+    font-weight: bold;
+    color: #ff5722;
+    font-size: 0.75rem;
 }
 
 #content {
     margin: 11px;
+    margin-left: 0;
     background: #0000006e;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+}
+
+#content > div {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+}
+
+#panel {
+    margin: 11px;
+    display: flex;
+    flex-direction: column;
+}
+
+#profile {
+    margin-top: 11px;
+    background: #0000006e;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    position: relative;
+    overflow: hidden;
+}
+
+#about-me {
+    position: absolute;
+    padding: 8px;
 }
 
 #navigation {
@@ -140,17 +175,6 @@ body {
     left: 0;
     right: 0;
     background: #000000c4;
-}
-
-#header > #card {
-    margin-left: 11px;
-}
-
-#application .text {
-    font-family: 'Kode_Mono';
-    font-weight: bold;
-    color: #ff5722;
-    font-size: 0.75rem;
 }
 
 @media (max-width: 1280px) {

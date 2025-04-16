@@ -27,9 +27,12 @@
     </div>
     -->
 
-    <div class="flex flex-col md:flex-row h-screen relative" x-data="application" id="application">
-        <div class="flex flex-col" id="panel">
-            <div class="flex flex-col" id="header">
+    <!-- <div class="flex flex-col md:flex-row h-screen relative" x-data="application" id="application"> -->
+    <div x-data="application" id="application">
+        <!-- <div class="flex flex-shrink flex-col" id="panel"> -->
+        <div id="panel">
+            <!-- class="flex flex-col"  -->
+            <div id="header">
                 <div class="flex flex-col" id="card">
                     <pre
                         class="name ascii">                           _ _           __ _           <br>  /\  /\___ _ __ __ _  ___| (_) ___     /__(_) ___  ___ <br> / /_/ / _ \ '__/ _` |/ __| | |/ _ \   / \// |/ _ \/ __|<br>/ __  /  __/ | | (_| | (__| | | (_) | / _  \ | (_) \__ \<br>\/ /_/ \___|_|  \__,_|\___|_|_|\___/  \/ \_/_|\___/|___/</pre>
@@ -52,27 +55,70 @@
                 -->
             </div>
 
-            <div class="flex-1 flex flex-col p-[8px]" id="profile">
-                <span class="text">
+            <!-- <div class="flex-1 flex flex-col p-[8px]" id="profile"> -->
+            <div id="profile">
+                <!-- class="w-24 h-auto rounded" -->
+                <!-- <span class="w-48 text"> -->
+                <!-- <div class="block">
+                        <span class="text">
+                            This is some text that wraps around the image. The image floats to the left, and the text naturally flows around it. 
+                            You can control spacing using `mr-4` (margin-right) and `mb-2` (margin-bottom) to keep things clean and readable.
+                        </span>
+                    </div> -->
+
+                <!-- <img src="/rios.jpg" alt="Example" class="mr-4 w-32 h-auto rounded" /> -->
+
+                <div id="about-me">
+                    <img src="/rios.jpg" alt="Example" class="float-right ml-4 ml-2 w-16 h-auto rounded" />
+                    <p class="text">
+                        Lorem ipsum dolor sit amet consectetur adipiscing elit. Quisque faucibus ex sapien vitae pellentesque sem placerat. In id cursus mi pretium tellus duis convallis.
+                    </p>
+                </div>
+
+
+
+
+                <!-- <div class="max-w-[250px] shrink-0 break-words p-4 bg-gray-200">
+                        <img 
+                        src="/rios.jpg" 
+                        alt="Example"
+                        class="w-24 h-auto rounded mr-4 flex-shrink-0" />
+
+                        <span class="text">
+                            This is some text that wraps around the image. The image floats to the left, and the text naturally flows around it. 
+                            You can control spacing using `mr-4` (margin-right) and `mb-2` (margin-bottom) to keep things clean and readable.
+                        </span>
+                    </div> -->
+
+
+                <!-- <span class="text">
                     About me...
-                </span>
+                </span> -->
             </div>
         </div>
 
-        <div class="flex-1 p-[8px]" id="content">
-            <div x-show="application.state.route === '/home'" class="text">
+        <div id="content">
+            <div class="p-[8px]" x-show="application.state.route === '/home'">
                 <span class="text">
-                    Home
+                    Lorem ipsum dolor sit amet consectetur adipiscing elit. Quisque faucibus ex sapien vitae pellentesque sem placerat. In id cursus mi pretium tellus duis convallis. Tempus leo eu aenean sed diam urna tempor. Pulvinar vivamus fringilla lacus nec metus bibendum egestas. Iaculis massa nisl malesuada lacinia integer nunc posuere. Ut hendrerit semper vel class aptent taciti sociosqu. Ad litora torquent per conubia nostra inceptos himenaeos.
+    
+                    Lorem ipsum dolor sit amet consectetur adipiscing elit. Quisque faucibus ex sapien vitae pellentesque sem placerat. In id cursus mi pretium tellus duis convallis. Tempus leo eu aenean sed diam urna tempor. Pulvinar vivamus fringilla lacus nec metus bibendum egestas. Iaculis massa nisl malesuada lacinia integer nunc posuere. Ut hendrerit semper vel class aptent taciti sociosqu. Ad litora torquent per conubia nostra inceptos himenaeos.
+                    
+                    Lorem ipsum dolor sit amet consectetur adipiscing elit. Quisque faucibus ex sapien vitae pellentesque sem placerat. In id cursus mi pretium tellus duis convallis. Tempus leo eu aenean sed diam urna tempor. Pulvinar vivamus fringilla lacus nec metus bibendum egestas. Iaculis massa nisl malesuada lacinia integer nunc posuere. Ut hendrerit semper vel class aptent taciti sociosqu. Ad litora torquent per conubia nostra inceptos himenaeos.
+                    
+                    Lorem ipsum dolor sit amet consectetur adipiscing elit. Quisque faucibus ex sapien vitae pellentesque sem placerat. In id cursus mi pretium tellus duis convallis. Tempus leo eu aenean sed diam urna tempor. Pulvinar vivamus fringilla lacus nec metus bibendum egestas. Iaculis massa nisl malesuada lacinia integer nunc posuere. Ut hendrerit semper vel class aptent taciti sociosqu. Ad litora torquent per conubia nostra inceptos himenaeos.
+                    
+                    Lorem ipsum dolor sit amet consectetur adipiscing elit. Quisque faucibus ex sapien vitae pellentesque sem placerat. In id cursus mi pretium tellus duis convallis. Tempus leo eu aenean sed diam urna tempor. Pulvinar vivamus fringilla lacus nec metus bibendum egestas. Iaculis massa nisl malesuada lacinia integer nunc posuere. Ut hendrerit semper vel class aptent taciti sociosqu. Ad litora torquent per conubia nostra inceptos himenaeos.
                 </span>
             </div>
 
-            <div x-show="application.state.route === '/projects'" class="text">
+            <div x-show="application.state.route === '/projects'">
                 <span class="text">
                     Projects
                 </span>
             </div>
 
-            <div x-show="application.state.route === '/contact'" class="text">
+            <div x-show="application.state.route === '/contact'">
                 <span class="text">
                     Contact
                 </span>
@@ -83,4 +129,5 @@
     <script type="module" src="/application.js"></script>
     <script type="module" src="/alpine.js"></script>
 </body>
+
 </html>
