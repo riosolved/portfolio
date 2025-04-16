@@ -139,23 +139,21 @@
 
         <div id="content">
             <!-- <div class="flex flex-wrap gap-x-3 gap-y-3 justify-evenly" id="home" -->
-            <div id="home"
-                x-show="application.state.route === '/home'">
+            <div id="home" x-show="application.state.route === '/home'">
                 <!-- application.state.route -->
                 <div class="projects">
                     <template x-for="project in application.state.projects" :key="project.title">
                         <div class="project card relative group">
                             <img :src="project.image" alt="Example"
                                 class="w-50 h-32 object-cover rounded-t-md border border-[#09090a]" />
-    
+
                             <div class="card bottom flex flex-col rounded-b-md border border-t-0 border-[#09090a]">
                                 <span class="title" x-text="project.title"></span>
                             </div>
-    
+
                             <span
                                 class="description absolute rounded-md inset-0 bg-opacity-50 opacity-0 group-hover:opacity-100 group-hover:pointer-events-auto pointer-events-none"
-                                x-text="project.description"
-                            >
+                                x-text="project.description">
                             </span>
                         </div>
                     </template>
@@ -179,4 +177,5 @@
     <script type="module" src="/application.js"></script>
     <script type="module" src="/alpine.js"></script>
 </body>
+
 </html>

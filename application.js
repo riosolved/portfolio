@@ -18,7 +18,7 @@ class Application {
                 },
                 {
                     title: 'Doro',
-                    description: 'Lorem ipsum dolor sit amet consectetur adipiscing elit. Quisque faucibus ex sapien vitae pellentesque sem placerat. In id cursus mi pretium tellus duis convallis.',
+                    description: 'A collaborative drawing experience on an infinite canvas.',
                     image: 'https://mattwilldev.com/img/thumb-2.jpg'
                 },
                 {
@@ -28,12 +28,12 @@ class Application {
                 },
                 {
                     title: 'Rush',
-                    description: 'Lorem ipsum dolor sit amet consectetur adipiscing elit. Quisque faucibus ex sapien vitae pellentesque sem placerat. In id cursus mi pretium tellus duis convallis.',
+                    description: 'An Unturned plugin for the battle royale experience.',
                     image: 'https://mattwilldev.com/img/thumb-6.jpg'
                 },
                 {
                     title: 'Portals',
-                    description: 'Lorem ipsum dolor sit amet consectetur adipiscing elit. Quisque faucibus ex sapien vitae pellentesque sem placerat. In id cursus mi pretium tellus duis convallis.',
+                    description: 'A 2D game prototype developed in Phaser.',
                     image: 'https://www.chnspart.com/_next/image?url=%2Fimages%2Fontariopulse.png&w=640&q=75'
                 },
             ]

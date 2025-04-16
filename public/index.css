@@ -531,7 +531,7 @@ html, body {
 }
 .projects {
   display: flex;
-  overflow-x: auto;
+  overflow: hidden;
   scroll-snap-type: x mandatory;
   white-space: nowrap;
 }
@@ -540,6 +540,8 @@ html, body {
   flex-direction: column;
   margin: 8px;
   min-width: 200px;
+  cursor: pointer;
+  user-select: none;
 }
 .project .card.bottom {
   background-color: #060607;
@@ -559,6 +561,7 @@ html, body {
   align-items: flex-start;
   padding: 8px;
   text-align: center;
+  text-wrap: auto;
   background-color: rgba(2, 2, 9, 0.936);
 }
 @media (max-width: 768px) {
