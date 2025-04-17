@@ -169,7 +169,7 @@ body {
 #about-me .blurb {
     font-family: 'UbuntuMono';
     font-size: 0.75rem;
-    color: #c4c4c4;
+    color: #9e9e9e;
     line-height: 9px;
 
     /* font-family: 'Monoid';
@@ -257,7 +257,7 @@ body {
     user-select: none;
     font-family: 'Monoid';
     font-size: 0.5rem;
-    color: cornsilk;
+    color: #FF9800;
     margin-right: 20px;
     pointer-events: all;
     cursor: pointer;
