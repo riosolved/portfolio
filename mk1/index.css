@@ -30,14 +30,8 @@
     font-style: italic;
 }
 
-@font-face {
-    font-family: 'UbuntuMono';
-    src: url('/fonts/UbuntuMono/UbuntuMono-R.ttf') format('truetype');
-    font-weight: normal;
-}
-
 html {
-    background-color: #090909;
+    background-color: #9e9e9e;
 }
 
 html,
@@ -54,7 +48,7 @@ body {
 
 .ascii {
     line-height: 1.15;
-    font-size: 12px;
+    font-size: 8px;
     color: cornsilk;
     overflow-y: hidden;
     text-align: left !important;
@@ -98,121 +92,50 @@ body {
     width: 100%;
     position: relative;
     display: flex;
-    flex-direction: column;
-    align-items: center;
+    flex-wrap: nowrap;
 }
 
-
-#panel {
-    position: absolute;
-    left: 50%;
-    transform: translate(-50%, 0%);
-}
-
-#header {
-    /* position: absolute;
-    top: 70px;
-    left: 50%;
-    transform: translate(-50%, -50%); */
-
-
-
-    /* margin-bottom: 300px; */
-    /* position: absolute;
-    top: 50%;
-    bottom: 50%;
-    left: 50%;
-    right: 50%; */
-}
-
-#profile {
-    /* background: #0000006e; */
-    /* display: flex; */
-    /* flex-direction: column; */
-    /* flex: 1; */
-
-
-
-    /* position: absolute;
-    top: 160px;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 365px; */
-
-
-
-    /* justify-content: flex-start; */
-    /* overflow: hidden; */
-}
-
-#about-me {
-    width: 360px;
-    margin-top: 4px;
-    /* font-family: 'Kode_Mono'; */
-    /* font-family: Consolas, Mono, monospace; */
-    font-family: Consolas;
-    font-size: 0.85rem;
-    overflow: hidden;
-    /* margin-bottom: 10px; */
-
-    /* position: absolute; */
-    /* padding: 8px;
-    max-width: 500px;
-    max-height: 100px; */
-}
-
-#about-me .image {
-    margin-right: 10px;
-    margin-left: 2px;
-}
-
-#about-me .blurb {
-    font-family: 'UbuntuMono';
-    font-size: 0.75rem;
-    color: #c4c4c4;
-    line-height: 9px;
-
-    /* font-family: 'Monoid';
-    font-size: ;
-    margin-right: 20px;
-    pointer-events: all;
-    cursor: pointer; */
-}
-
-#content {
-    /* margin-left: 0; */
-    /* background: #0000006e; */
-    display: flex;
-    flex-direction: column;
-    flex: 1;
-    justify-content: center;
-    align-items: center;
-    /* overflow-x: hidden;
-    overflow-y: auto; */
-    pointer-events: all;
-}
-
-#content .construction {
-    display: flex;
-    flex-direction: column;
-}
-
-#content .construction .title {
-    font-family: 'Kode_Mono';
-    font-size: 2rem;
-    color: #ffffff;
-    margin-bottom: 10px;
-}
-
-#content .construction .blurb {
+#application .text {
     font-family: 'Kode_Mono';
     font-size: 0.75rem;
     color: #A3A3A3;
 }
 
+#content {
+    margin: 11px;
+    margin-left: 0;
+    background: #0000006e;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    overflow-x: hidden;
+    overflow-y: auto;
+    pointer-events: all;
+}
+
+#panel {
+    margin: 11px;
+    max-width: 250px;
+    display: flex;
+    flex-direction: column;
+}
+
+#profile {
+    background: #0000006e;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    position: relative;
+    overflow: hidden;
+}
+
+#about-me {
+    padding: 8px;
+}
+
 #navigation {
-    /* margin-left: 11px;
-    margin-bottom: 11px; */
+    margin-left: 11px;
+    margin-bottom: 11px;
     background: #0000006e;
 }
 
@@ -254,17 +177,20 @@ body {
 }
 
 #items > a {
-    user-select: none;
-    font-family: 'Monoid';
-    font-size: 0.5rem;
-    color: cornsilk;
-    margin-right: 20px;
-    pointer-events: all;
+    padding: 4px;
+    background-color: #152030;
+    border: 1px solid #233044;
+    color: #bcad9d;
+    margin: 8px;
     cursor: pointer;
+    pointer-events: all;
+    border-radius: .375rem;
 }
 
 #items > a:hover {
-    color: rgb(95, 90, 69);
+    background-color: #111720;
+    color: #4a5358;
+    border: 1px solid #181f29;
 }
 
 #items > a:first-child {
@@ -318,14 +244,6 @@ body {
     background-color: rgba(2, 2, 9, 0.936);
 }
 
-.logos.container {
-    padding-top: 4px;
-    height: 55px;
-    width: 290px;
-    overflow: hidden;
-}
-
-/*
 @media (max-width: 768px) {
     .ascii {
         font-size: 12px;
@@ -337,8 +255,7 @@ body {
 
     #header > #card {
         align-items: center;
-        // margin: 0;
-        // margin-top: 11px;
+        margin: 0;
+        margin-top: 11px;
     }
 }
-*/

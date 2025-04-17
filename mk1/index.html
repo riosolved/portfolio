@@ -9,87 +9,8 @@
 </head>
 
 <body>
-    <div x-data="application" id="application">
-        <div id="panel">
-            <div id="header">
-                <div class="flex flex-col">
-                    <pre
-                        class="name ascii">                           _ _           __ _           <br>  /\  /\___ _ __ __ _  ___| (_) ___     /__(_) ___  ___ <br> / /_/ / _ \ '__/ _` |/ __| | |/ _ \   / \// |/ _ \/ __|<br>/ __  /  __/ | | (_| | (__| | | (_) | / _  \ | (_) \__ \<br>\/ /_/ \___|_|  \__,_|\___|_|_|\___/  \/ \_/_|\___/|___/</pre>
-
-                    <pre class="break first ascii">--------------------------------------------------------</pre>
-
-                    <div class="flex flex-row items-center">
-                        <div class="flex flex-1 flex-col">
-                            <span class="title">
-                                SOFTWARE ENGINEER
-                            </span>
-                        </div>
-
-                        <div id="items">
-                            <a href="https://github.com/riosolved" title="GitHub" rel="noopener noreferrer"
-                                target="_blank">
-                                GitHub
-                            </a>
-
-                            <a href="https://www.linkedin.com/in/riosolved" title="LinkedIn" rel="noopener noreferrer"
-                                target="_blank">
-                                LinkedIn
-                            </a>
-
-                            <a title="Resume">
-                                Resume
-                            </a>
-
-                            <a title="Contact">
-                                Contact
-                            </a>
-                        </div>
-                    </div>
-
-                    <pre class="break ascii">--------------------------------------------------------</pre>
-                </div>
-            </div>
-
-            <div id="profile">
-                <div class="flex flex-row" id="about-me">
-                    <img class="w-16 h-16 image" src="/rios.jpg" />
-
-                    <div class="flex flex-col">
-                        <p class="blurb">
-                            7+ years of professional experience with code.
-                        </p>
-
-                        <div class="logos container">
-                            <canvas id="logos" width="290" height="55"></canvas>
-                        </div>
-
-                        <!--
-                        <div class="logo-scroller">
-                            <div class="logo-track">
-                                <img src="./logos/discover.png" alt="Logo 1" />
-                                <img src="./logos/vivint_solar.png" alt="Logo 2" />
-                                <img src="./logos/nice_cxone.png" alt="Logo 3" />
-                                <img src="./logos/discover.png" alt="Logo 1" />
-                                <img src="./logos/vivint_solar.png" alt="Logo 2" />
-                                <img src="./logos/nice_cxone.png" alt="Logo 3" />
-                            </div>
-                        </div>
-                        -->
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <script type="module" src="/application.js"></script>
-    <script type="module" src="/alpine.js"></script>
-</body>
-
-</html>
-
-<!-- 7+ years of professional experience in full-stack development. -->
-<!-- TODO : FIGURE OUT SITEMAP -->
-<!--
+    <!-- TODO : FIGURE OUT SITEMAP -->
+    <!--
     <div id="header" class="h-16 bg-blue-500 flex justify-between items-center px-4 shrink-0 text-white">
         <div id="logo">
             <a hfref="#"></a>
@@ -106,8 +27,13 @@
     </div>
     -->
 
-<!--
-                <div class="flex flex-col">
+    <!-- <div class="flex flex-col md:flex-row h-screen relative" x-data="application" id="application"> -->
+    <div x-data="application" id="application">
+        <!-- <div class="flex flex-shrink flex-col" id="panel"> -->
+        <div id="panel">
+            <!-- class="flex flex-col"  -->
+            <div id="header">
+                <div class="flex flex-col" id="card">
                     <pre
                         class="name ascii">                           _ _           __ _           <br>  /\  /\___ _ __ __ _  ___| (_) ___     /__(_) ___  ___ <br> / /_/ / _ \ '__/ _` |/ __| | |/ _ \   / \// |/ _ \/ __|<br>/ __  /  __/ | | (_| | (__| | | (_) | / _  \ | (_) \__ \<br>\/ /_/ \___|_|  \__,_|\___|_|_|\___/  \/ \_/_|\___/|___/</pre>
 
@@ -119,18 +45,16 @@
 
                     <pre class="break ascii">--------------------------------------------------------</pre>
                 </div>
-                -->
 
-<!--
+                <!--
                 <div class="flex-1 flex flex-col p-[8px]" id="profile">
                     <a class="text" href="/home" @click.prevent="application.navigate('/home')">Home</a>
                     <a class="text" href="/projects" @click.prevent="application.navigate('/about')">Projects</a>
                     <a class="text" href="/contact" @click.prevent="application.navigate('/contact')">Contact</a>
                 </div>
                 -->
+            </div>
 
-
-<!--
             <div id="items">
                 <a href="https://github.com/riosolved" title="GitHub" rel="noopener noreferrer" target="_blank">
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
@@ -161,24 +85,19 @@
                     </svg>
                 </a>
             </div>
-            -->
 
-<!-- <div class="flex-1 flex flex-col p-[8px]" id="profile"> -->
-
-
-<!--
-            <div id="skills">
-                <a target="_blank" rel="noopener noreferrer nofollow"
-                    href="https://camo.githubusercontent.com/ccbe828e30bf09fc30639d2fecff29958bef05977065d845c92cf5d0427e61cd/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f68746d6c352532302d2532334533344632362e7376673f267374796c653d666f722d7468652d6261646765266c6f676f3d68746d6c35266c6f676f436f6c6f723d7768697465"><img
-                        alt="HTML5"
-                        src="https://camo.githubusercontent.com/ccbe828e30bf09fc30639d2fecff29958bef05977065d845c92cf5d0427e61cd/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f68746d6c352532302d2532334533344632362e7376673f267374796c653d666f722d7468652d6261646765266c6f676f3d68746d6c35266c6f676f436f6c6f723d7768697465"
-                        data-canonical-src="https://img.shields.io/badge/html5%20-%23E34F26.svg?&amp;style=for-the-badge&amp;logo=html5&amp;logoColor=white"
-                        style="max-width: 100%;"></a>
-            </div>
-            -->
-
-<!--
+            <!-- <div class="flex-1 flex flex-col p-[8px]" id="profile"> -->
             <div id="profile">
+                <!-- class="w-24 h-auto rounded" -->
+                <!-- <span class="w-48 text"> -->
+                <!-- <div class="block">
+                        <span class="text">
+                            This is some text that wraps around the image. The image floats to the left, and the text naturally flows around it. 
+                            You can control spacing using `mr-4` (margin-right) and `mb-2` (margin-bottom) to keep things clean and readable.
+                        </span>
+                    </div> -->
+
+                <!-- <img src="/rios.jpg" alt="Example" class="mr-4 w-32 h-auto rounded" /> -->
 
                 <div id="about-me">
                     <img src="/rios.jpg" alt="Example" class="float-left mr-3 mb-2 w-16 h-auto" />
@@ -196,19 +115,32 @@
                             data-canonical-src="https://img.shields.io/badge/html5%20-%23E34F26.svg?&amp;style=for-the-badge&amp;logo=html5&amp;logoColor=white"
                             style="max-width: 100%;"></a>
                 </div>
+
+
+
+                <!-- <div class="max-w-[250px] shrink-0 break-words p-4 bg-gray-200">
+                        <img 
+                        src="/rios.jpg" 
+                        alt="Example"
+                        class="w-24 h-auto rounded mr-4 flex-shrink-0" />
+
+                        <span class="text">
+                            This is some text that wraps around the image. The image floats to the left, and the text naturally flows around it. 
+                            You can control spacing using `mr-4` (margin-right) and `mb-2` (margin-bottom) to keep things clean and readable.
+                        </span>
+                    </div> -->
+
+
+                <!-- <span class="text">
+                    About me...
+                </span> -->
             </div>
-            -->
+        </div>
 
-
-<!--
-            <div class="construction">
-                <span class="title">Under Construction</span>
-                <span class="blurb">Please check back later or contact me!</span>
-            </div>
-            -->
-
-<!--
+        <div id="content">
+            <!-- <div class="flex flex-wrap gap-x-3 gap-y-3 justify-evenly" id="home" -->
             <div id="home" x-show="application.state.route === '/home'">
+                <!-- application.state.route -->
                 <div class="projects">
                     <template x-for="project in application.state.projects" :key="project.title">
                         <div class="project card relative group">
@@ -239,28 +171,11 @@
                     Contact
                 </span>
             </div>
-            -->
+        </div>
+    </div>
 
+    <script type="module" src="/application.js"></script>
+    <script type="module" src="/alpine.js"></script>
+</body>
 
-<!-- class="w-24 h-auto rounded" -->
-<!-- <span class="w-48 text"> -->
-<!-- <div class="block">
-                        <span class="text">
-                            This is some text that wraps around the image. The image floats to the left, and the text naturally flows around it. 
-                            You can control spacing using `mr-4` (margin-right) and `mb-2` (margin-bottom) to keep things clean and readable.
-                        </span>
-                    </div> -->
-
-<!-- <img src="/rios.jpg" alt="Example" class="mr-4 w-32 h-auto rounded" /> -->
-
-<!-- <div class="max-w-[250px] shrink-0 break-words p-4 bg-gray-200">
-                        <img 
-                        src="/rios.jpg" 
-                        alt="Example"
-                        class="w-24 h-auto rounded mr-4 flex-shrink-0" />
-
-                        <span class="text">
-                            This is some text that wraps around the image. The image floats to the left, and the text naturally flows around it. 
-                            You can control spacing using `mr-4` (margin-right) and `mb-2` (margin-bottom) to keep things clean and readable.
-                        </span>
-                    </div> -->
+</html>
