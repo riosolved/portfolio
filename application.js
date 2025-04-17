@@ -14,7 +14,7 @@ class Application {
 
         context.globalAlpha = 0.8;
 
-        const padding = 35;
+        const padding = 40;
 
         const logos = {
             discover: {
@@ -23,7 +23,7 @@ class Application {
                 scale: 0.033,
                 offset: {
                     position: {
-                        y: 19
+                        y: 20
                     }
                 }
             },
@@ -51,7 +51,7 @@ class Application {
 
         const list = [];
 
-        let scrollX = 0;
+        let scrollX = padding;
 
         const scrollSpeed = 0.05;
 
