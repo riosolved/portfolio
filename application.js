@@ -23,7 +23,7 @@ class Application {
                 scale: 0.033,
                 offset: {
                     position: {
-                        y: 20
+                        y: 13
                     }
                 }
             },
@@ -33,7 +33,7 @@ class Application {
                 scale: 0.075,
                 offset: {
                     position: {
-                        y: 18
+                        y: 10.5
                     }
                 }
             },
@@ -43,7 +43,7 @@ class Application {
                 scale: 0.25,
                 offset: {
                     position: {
-                        y: 11
+                        y: 3
                     }
                 }
             }
