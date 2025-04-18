@@ -861,17 +861,7 @@ export default class Canvas {
     }
 
     handleResize = () => {
-        this.canvas.width = window.innerWidth;
-        this.canvas.height = window.innerHeight;
-
-        this.rows = Math.floor(this.canvas.height / this.cellSize);
-        this.columns = Math.floor(this.canvas.width / this.cellSize);
-
-        this.chunker = new Chunker(
-            this.columns,
-            this.rows,
-            this.cellSize
-        );
+        this.target();
     };
 
     handleVisibilityChange = () => {
@@ -902,40 +892,48 @@ export default class Canvas {
         cancelAnimationFrame(this.id);
     }
 
-    initialize = () => {
-        this.canvas = document.createElement("canvas");
-        this.container = document.createElement("div");
-        this.noise = document.createElement("div");
-        this.overlay = document.createElement("div");
+    target = () => {
+        const target = document.getElementById("main");
 
-        this.container.className = "background container";
-        this.noise.className = "background noise";
-        this.overlay.className = "background overlay";
-        this.canvas.className = "background canvas";
-
-        this.context = this.canvas.getContext("2d");
-        this.context.imageSmoothingEnabled = false;
-
-        this.container.appendChild(this.overlay);
-        this.container.appendChild(this.noise);
-        this.container.appendChild(this.canvas);
-
-        document.body.appendChild(this.container);
-
-        this.canvas.width = window.innerWidth;
-        this.canvas.height = window.innerHeight;
+        this.canvas.width = target.offsetWidth;
+        this.canvas.height = target.offsetHeight;
 
         this.rows = Math.floor(this.canvas.height / this.cellSize);
         this.columns = Math.floor(this.canvas.width / this.cellSize);
-
-        window.addEventListener("resize", this.handleResize);
-        window.addEventListener("visibilitychange", this.handleVisibilityChange);
 
         this.chunker = new Chunker(
             this.columns,
             this.rows,
             this.cellSize
         );
+
+        return target;
+    }
+
+    initialize = () => {
+        window.addEventListener("resize", this.handleResize);
+        window.addEventListener("visibilitychange", this.handleVisibilityChange);
+
+        this.canvas = document.createElement("canvas");
+        const container = document.createElement("div");
+        const noise = document.createElement("div");
+        const overlay = document.createElement("div");
+
+        container.id = "background";
+        noise.className = "background noise";
+        overlay.className = "background overlay";
+        this.canvas.className = "background canvas";
+
+        this.context = this.canvas.getContext("2d");
+        this.context.imageSmoothingEnabled = false;
+
+        const target = this.target();
+
+        container.appendChild(overlay);
+        container.appendChild(noise);
+        container.appendChild(this.canvas);
+
+        target.appendChild(container);
 
         this.resume();
     }
