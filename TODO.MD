@@ -1,0 +1,5 @@
+- Fix animation reference on "about" scroll getting broke when tabbing out.
+- Update Resume.
+- Implement new Resume.
+- Modal for "employability" component.
+- Footer.
