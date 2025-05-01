@@ -10,6 +10,10 @@ const FRAMEWORKS = 'FRAMEWORKS';
 const QUALITY = 'QUALITY';
 const CI_CD = 'CI_CD';
 
+const RESUME = 'RESUME';
+const CONTACT = 'CONTACT';
+const OPPORTUNITY = 'OPPORTUNITY';
+
 const skills_by_capabilities = {
     [LANGUAGES]: [
         {
@@ -142,6 +146,15 @@ const skills_by_capabilities = {
         {
             label: 'ColdFusion'
         },
+        {
+            label: 'Gatsby'
+        },
+        {
+            label: 'Svelte'
+        },
+        {
+            label: 'WordPress'
+        },
     ],
     [QUALITY]: [
         {
@@ -190,8 +203,6 @@ const skills_by_capabilities = {
         },
     ],
 };
-
-let scroll_about_last_timestamp = 0, scroll_about_accumulated_time = 0;
 
 class Application {
     background = new Background();
@@ -268,7 +279,20 @@ class Application {
                     description: 'A 2D game prototype developed in Phaser.',
                     image: 'https://www.chnspart.com/_next/image?url=%2Fimages%2Fontariopulse.png&w=640&q=75'
                 },
-            ]
+            ],
+            footer: {
+                source: 'Retrieving latest data...'
+            },
+            modal: {
+                opened: false,
+                context: '',
+                placeholder_for_message: '',
+                form: {
+                    name: '',
+                    email: '',
+                    message: '',
+                }
+            }
         },
         controller: {
             navigate: (route) => {
@@ -307,23 +331,22 @@ class Application {
                     application.controller.skills(LANGUAGES, application);
                 },
                 scroll_about: () => {
+                    let id,
+                        animating = false,
+                        scroll_about_last_timestamp = null,
+                        scroll_about_accumulated_time = 0;
+
                     const about = document.getElementById('about');
                     const element = about.querySelector('#story');
                     const units = 2;
                     const duration = 150;
-                
-                    if (element._scrolling) {
-                        window.cancelAnimationFrame(element._scrolling);
-                        element._scrolling = null;
-                    }
-                
+
                     const scroll = (timestamp) => {
                         if (!scroll_about_last_timestamp) {
                             scroll_about_last_timestamp = timestamp;
 
                             return;
                         }
-
 
                         const deltaTime = timestamp - scroll_about_last_timestamp;
 
@@ -337,7 +360,7 @@ class Application {
                         const steps = Math.floor(scroll_about_accumulated_time / duration) * units;
 
                         if (steps > 0) {
-                            if(element.scrollTop + element.clientHeight >= element.scrollHeight) {
+                            if (element.scrollTop + element.clientHeight >= element.scrollHeight) {
                                 setTimeout(() => {
                                     element.scrollTop = 0;
                                     scroll_about_last_timestamp = null;
@@ -345,7 +368,7 @@ class Application {
                                 }, 1000);
                             } else {
                                 element.scrollTop += units;
-    
+
                                 scroll_about_accumulated_time -= steps * duration;
                             }
                         }
@@ -354,15 +377,113 @@ class Application {
                     const loop = (timestamp) => {
                         scroll(timestamp);
 
-                        element._scrolling = window.requestAnimationFrame(loop);
+                        id = window.requestAnimationFrame(loop);
                     };
 
-                    setTimeout(() => {
+                    const resume = () => {
+                        if (animating) return;
+
+                        animating = true;
+
                         scroll_about_last_timestamp = null;
                         scroll_about_accumulated_time = 0;
 
                         loop();
-                    }, 1000);
+                    };
+
+                    const pause = () => {
+                        animating = false;
+
+                        window.cancelAnimationFrame(id);
+                    }
+
+                    const handleVisibilityChange = () => {
+                        if (document.visibilityState === "visible") {
+                            resume();
+                        } else {
+                            pause();
+                        }
+                    };
+
+                    window.addEventListener("visibilitychange", handleVisibilityChange);
+
+                    resume();
+                },
+                footer: (application) => {
+                    Promise.all([
+                        fetch('https://raw.githubusercontent.com/riosolved/portfolio/main/package.json').then(res => res.json()),
+                        fetch('https://api.github.com/repos/riosolved/portfolio/commits').then(res => res.json()),
+                    ]).then((data = []) => {
+                        const [
+                            Information,
+                            commits
+                        ] = data;
+
+
+                        const latest_commit = commits[0];
+                        const sha = latest_commit.sha.substring(0, 7);
+
+                        application.state.footer.source = `Version: ${Information.version} - Latest: ${sha} @ ${new Date(latest_commit.commit.author.date).toLocaleDateString()}`;
+                    });
+                }
+            },
+            modal: {
+                submit: (application) => {
+                    const {
+                        context
+                    } = application.state.modal ?? {};
+
+                    const {
+                        name,
+                        email,
+                        message
+                    } = application.state.modal.form ?? {};
+
+                    grecaptcha.ready(() => {
+                        grecaptcha.execute('6LfioiorAAAAANenh3jIPGMmgZNVmwFHLp87jgDK', { action: 'LOGIN' }).then((token) => {
+                            fetch(`${__environment_variables__.API}/contact`, { // NOTE : Value of "__API__" is defined in "vite.configuration.development" - string is overwritten on build of client.
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json'
+                                },
+                                body: JSON.stringify({
+                                    name,
+                                    email,
+                                    message,
+                                    context,
+                                    token
+                                })
+                            }).then(data => {
+                                // TODO : POP TOAST - SUCCESS
+                            }).catch(error => {
+                                // TODO : POP TOAST - FAILURE
+                            });
+                        });
+                    });
+                },
+                close: (application) => {
+                    application.state.modal.opened = false;
+                    application.state.modal.context = '';
+                    application.state.modal.placeholder_for_message = '';
+                    application.state.modal.form.name = '';
+                    application.state.modal.form.email = '';
+                    application.state.modal.form.message = '';
+                },
+                open_for_resume: (application) => {
+                    application.state.modal.placeholder_for_message = "Help me understand how I can help, and I'll have that resume on its way!";
+                    application.state.modal.context = RESUME;
+                    application.state.modal.opened = true;
+
+                },
+                open_for_contact: (application) => {
+                    application.state.modal.placeholder_for_message = '"Free Your Mind" — Morpheus (The Matrix)';
+                    application.state.modal.context = CONTACT;
+                    application.state.modal.opened = true;
+                },
+                open_for_opportunity: (application) => {
+                    application.state.modal.placeholder_for_message = "I'm currently looking for new opportunities. Got a match? Let's chat!";
+                    application.state.modal.context = OPPORTUNITY;
+                    application.state.modal.opened = true;
                 },
             }
         }

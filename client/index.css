@@ -61,6 +61,7 @@ body {
     margin-bottom: 0 !important;
     display: inline-block !important;
     font-family: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+    user-select: none;
 }
 
 .name.holder {
@@ -100,7 +101,7 @@ body {
 
 #about #story {
     height: 150px;
-    padding-top: 32px;
+    padding-top: 64px;
     padding-bottom: 64px;
     overflow: hidden;
     overflow-y: scroll;
@@ -108,24 +109,20 @@ body {
 
 #about #story.collapsed {
     overflow: hidden;
-    -webkit-mask-image: linear-gradient(
-        to bottom,
-        rgba(0, 0, 0, 0) 0%,
-        rgba(0, 0, 0, 0.5) 10%,
-        rgba(0, 0, 0, 1) 20%,
-        rgba(0, 0, 0, 1) 80%,
-        rgba(0, 0, 0, 0.5) 90%,
-        rgba(0, 0, 0, 0) 100%
-    );
-    mask-image: linear-gradient(
-        to bottom,
-        rgba(0, 0, 0, 0) 0%,
-        rgba(0, 0, 0, 0.5) 10%,
-        rgba(0, 0, 0, 1) 20%,
-        rgba(0, 0, 0, 1) 80%,
-        rgba(0, 0, 0, 0.5) 90%,
-        rgba(0, 0, 0, 0) 100%
-    );
+    -webkit-mask-image: linear-gradient(to bottom,
+            rgba(0, 0, 0, 0) 0%,
+            rgba(0, 0, 0, 0.5) 10%,
+            rgba(0, 0, 0, 1) 20%,
+            rgba(0, 0, 0, 1) 80%,
+            rgba(0, 0, 0, 0.5) 90%,
+            rgba(0, 0, 0, 0) 100%);
+    mask-image: linear-gradient(to bottom,
+            rgba(0, 0, 0, 0) 0%,
+            rgba(0, 0, 0, 0.5) 10%,
+            rgba(0, 0, 0, 1) 20%,
+            rgba(0, 0, 0, 1) 80%,
+            rgba(0, 0, 0, 0.5) 90%,
+            rgba(0, 0, 0, 0) 100%);
 }
 
 #about span {
@@ -285,6 +282,10 @@ body {
     border-radius: 4px;
 }
 
+#main #employability:hover {
+    background-color: rgb(9, 12, 15);
+}
+
 #main #employability span {
     font-family: 'Kode_Mono';
     font-size: 0.65rem;
@@ -326,10 +327,12 @@ body {
         transform: translate(-50%, -50%) scale(1);
         opacity: 0.6;
     }
+
     70% {
         transform: translate(-50%, -50%) scale(2);
         opacity: 0;
     }
+
     100% {
         transform: translate(-50%, -50%) scale(2);
         opacity: 0;
@@ -369,8 +372,85 @@ body {
     width: 500px;
     min-height: 50px;
     text-align: center;
-    color: #00ff2a;
+    color: #00ff2b;
     font-family: 'Kode_Mono';
     font-size: 0.75rem;
     line-height: 1.5rem;
+}
+
+#footer {
+    height: 50px;
+    background-color: black;
+    color: #00ff2b;
+    font-family: 'Kode_Mono';
+    font-size: 0.75rem;
+    padding: 8px 16px;
+}
+
+#modal {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 2;
+    background: rgb(17 17 20 / 56%);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#modal .content {
+    background: black;
+    padding: 2rem 2rem 0 2rem;
+    min-width: 300px;
+    max-width: 90%;
+    color: #00ff2b;
+    font-family: 'Kode_Mono';
+    font-size: 0.75rem;
+    box-shadow: 0px 0px 20px 0px #00000096;
+}
+
+#modal .content .label {
+    color: white;
+}
+
+#modal .content input,
+textarea {
+    padding: 8px;
+}
+
+#modal .content button {
+    cursor: pointer;
+}
+
+
+#modal .content input,
+textarea,
+button {
+    border: 1px solid #00ff2b;
+}
+
+#modal .content input:focus,
+textarea:focus,
+button:hover {
+    border: 1px solid #00500d;
+}
+
+#modal .content button:hover {
+    color: #00500d;
+}
+
+.grecaptcha-badge {
+    display: none;
+}
+
+#recaptcha_disclaimer {
+    color: #E0E0E0;
+    font-family: 'Kode_Mono';
+    font-size: 0.6rem;
+    margin: 15px 0;
+    text-transform: uppercase;
+    width: 300px;
+    text-align: center;
 }

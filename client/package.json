@@ -1,15 +1,18 @@
 {
-  "name": "riosolved",
-  "version": "1.0.0",
+  "name": "riosolved.client",
+  "version": "0.0.0",
   "private": true,
-  "license": "ISC",
+  "description": "The client of riosolved.",
+  "author": "Digicore Labs",
+  "license": "MIT",
   "scripts": {
     "development::tailwindcss": "npx onchange 'index.html' 'index.css' -- npx @tailwindcss/cli -i ./index.css -o ./public/index.css",
-    "development": "vite --config ./vite.configuration.development.js"
+    "development": "vite --mode development --config ./vite.configuration.development.js"
   },
   "devDependencies": {
     "@tailwindcss/cli": "^4.0.17",
     "alpinejs": "^3.14.9",
+    "dotenv": "^16.5.0",
     "onchange": "^7.1.0",
     "tailwindcss": "^4.0.17",
     "vite": "^6.2.3"
