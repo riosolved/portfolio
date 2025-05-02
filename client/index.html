@@ -112,47 +112,78 @@
             </div>
 
             <div id="modal" x-show="application.state.modal.opened" x-cloak>
-                <div class="content">
-                    <div class="flex flex-row gap-4">
-                        <div class="flex flex-col">
-                            <span class="label mb-[5px]">Name</span>
-
-                            <input type="text" class="rounded focus:outline-none" maxlength="50" placeholder="Full Name"
-                                x-model="application.state.modal.form.name" />
-                        </div>
-
-                        <div class="flex flex-col">
-                            <span class="label mb-[5px]">Email</span>
-
-                            <input type="text" class="rounded focus:outline-none" maxlength="254"
-                                placeholder="hello@world.com" x-model="application.state.modal.form.email" />
-                        </div>
+                <div class="content flex flex-col">
+                    <div class="flex flex-1" x-show="application.state.messaging">
+                        <img class="image" src="/cat.gif" title="cat" style="height: 300px;" />
                     </div>
 
-                    <div class="flex flex-col my-4">
+                    <div class="flex flex-col flex-1" x-show="!application.state.messaging">
+                        <div class="flex flex-row gap-4">
+                            <div class="flex flex-col">
+                                <span class="label mb-[5px]">Name</span>
+
+                                <input
+                                    name="name"
+                                    type="text"
+                                    class="rounded focus:outline-none"
+                                    maxlength="50"
+                                    placeholder="Full Name"
+                                    x-model="application.state.modal.form.name"
+                                    @input="application.controller.modal.form.validate(application)"
+                                />
+                            </div>
+
+                            <div class="flex flex-col">
+                                <span class="label mb-[5px]">Email</span>
+
+                                <input
+                                    name="email"
+                                    type="text"
+                                    class="rounded focus:outline-none"
+                                    maxlength="254"
+                                    placeholder="hello@world.com"
+                                    x-model="application.state.modal.form.email"
+                                    @input="application.controller.modal.form.validate(application)"
+                                />
+                            </div>
+                        </div>
+
+                        <div class="flex flex-col my-4">
+                            <div class="flex flex-row">
+                                <span class="label mb-[5px] flex flex-1">Message</span>
+
+                                <span class="text-gray-500"
+                                    x-text="`${application.state.modal.form.message.length}/500`"></span>
+                            </div>
+
+                            <textarea
+                                name="message"
+                                class="rounded resize-none focus:outline-none"
+                                rows="6"
+                                maxlength="500"
+                                :placeholder="application.state.modal.placeholder_for_message"
+                                x-model="application.state.modal.form.message"
+                                @input="application.controller.modal.form.validate(application)"
+                            ></textarea>
+                        </div>
+
                         <div class="flex flex-row">
-                            <span class="label mb-[5px] flex flex-1">Message</span>
+                            <div class="flex-1">
+                                <button class="px-4 py-2 rounded"
+                                    @click="application.controller.modal.close(application)">
+                                    Close
+                                </button>
+                            </div>
 
-                            <span class="text-gray-500"
-                                x-text="`${application.state.modal.form.message.length}/500`"></span>
-                        </div>
-
-                        <textarea name="" id="" class="rounded resize-none focus:outline-none" rows="6" maxlength="500"
-                            :placeholder="application.state.modal.placeholder_for_message"
-                            x-model="application.state.modal.form.message"></textarea>
-                    </div>
-
-                    <div class="flex flex-row">
-                        <div class="flex-1">
-                            <button class="px-4 py-2 rounded" @click="application.controller.modal.close(application)">
-                                Close
-                            </button>
-                        </div>
-
-                        <div>
-                            <button class="px-4 py-2 rounded" @click="application.controller.modal.submit(application)">
-                                Submit
-                            </button>
+                            <div>
+                                <button
+                                    class="px-4 py-2 rounded"
+                                    @click="application.controller.modal.submit(application)"
+                                    x-show="application.state.modal.form.is_valid"
+                                >
+                                    Submit
+                                </button>
+                            </div>
                         </div>
                     </div>
 
@@ -170,7 +201,15 @@
                 </div>
             </div>
 
-            <div id="employability" @click="application.controller.modal.open_for_opportunity(application)">
+            <div id="toasts" x-cloak>
+                <template x-for="(toast, index) in application.state.toasts" :key="toast.id">
+                    <div class="toast" x-text="toast.message" :class="toast.class" :style="`
+                            bottom: ${index * 40}px;
+                        `"></div>
+                </template>
+            </div>
+
+            <div id="employability" @click="application.controller.modal.open_for_opportunity(application)" x-cloak>
                 <div class="indicator available"></div>
 
                 <span>

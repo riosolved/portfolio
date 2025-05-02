@@ -7,6 +7,7 @@ import (
 	"encoding/json"
 	"riosolved/server/api/utilities"
 	"fmt"
+	"strings"
 )
 
 type CONTACT_PAYLOAD struct {
@@ -47,6 +48,21 @@ func Contact(
 		return
 	}
 
+	// NOTE : VALIDATE PAYLOAD FIELDS
+	if payload.NAME == "" || payload.EMAIL == "" || payload.MESSAGE == "" || payload.CONTEXT == "" || payload.GOOGLE_RECAPTCHA_TOKEN == "" {
+		writer.WriteHeader(http.StatusBadRequest)
+		json.NewEncoder(writer).Encode(map[string]string{ "message": "All fields are required." })
+
+		return
+	}
+	
+	if !strings.Contains(payload.EMAIL, "@") || !strings.Contains(payload.EMAIL, ".") {
+		writer.WriteHeader(http.StatusBadRequest)
+		json.NewEncoder(writer).Encode(map[string]string{ "message": "A valid email address is required." })
+
+		return
+	}
+	
 	// NOTE : SOURCE RECAPTCHA SECRET
 	RECAPTCHA_V3_SECRET := os.Getenv("RECAPTCHA_V3_SECRET")
 

@@ -409,6 +409,7 @@ body {
     font-family: 'Kode_Mono';
     font-size: 0.75rem;
     box-shadow: 0px 0px 20px 0px #00000096;
+    min-height: 250px;
 }
 
 #modal .content .label {
@@ -453,4 +454,29 @@ button:hover {
     text-transform: uppercase;
     width: 300px;
     text-align: center;
+}
+
+#toasts .toast {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    z-index: 2;
+    padding: 8px;
+    margin: 10px;
+    margin-top: 0;
+    color: #E0E0E0;
+    font-family: 'Kode_Mono';
+    font-size: 0.6rem;
+}
+
+#toasts .toast.information {
+    background: #212121;
+}
+
+#toasts .toast.success {
+    background: #022405;
+}
+
+#toasts .toast.error {
+    background: #3a0404;
 }

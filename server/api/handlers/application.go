@@ -10,6 +10,7 @@ type Application_Response_Payload struct {
 	Message string `json:"message"`
 }
 
+// TODO
 func Application(
 	writer http.ResponseWriter,
 	request *http.Request,

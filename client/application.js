@@ -204,6 +204,28 @@ const skills_by_capabilities = {
     ],
 };
 
+const TOAST = {
+    TYPES: {
+        INFORMATION: 'INFORMATION',
+        SUCCESS: 'SUCCESS',
+        ERROR: 'ERROR',
+    }
+}
+
+const determine_toast_class = (type) => {
+    switch (type) {
+        case TOAST.TYPES.INFORMATION: {
+            return 'information';
+        }
+        case TOAST.TYPES.SUCCESS: {
+            return 'success';
+        }
+        case TOAST.TYPES.ERROR: {
+            return 'error';
+        }
+    }
+}
+
 class Application {
     background = new Background();
     logoer = new Logoer();
@@ -219,6 +241,7 @@ class Application {
             about: {
                 collapsed: true,
             },
+            messaging: false,
             capabilities: [
                 {
                     label: 'Languages',
@@ -291,8 +314,10 @@ class Application {
                     name: '',
                     email: '',
                     message: '',
+                    is_valid: false,
                 }
-            }
+            },
+            toasts: []
         },
         controller: {
             navigate: (route) => {
@@ -424,13 +449,16 @@ class Application {
 
                         application.state.footer.source = `Version: ${Information.version} - Latest: ${sha} @ ${new Date(latest_commit.commit.author.date).toLocaleDateString()}`;
                     });
-                }
+                },
             },
             modal: {
                 submit: (application) => {
-                    application.controller.modal.close(application);
-
-                    // TODO : POP TOAST - NOTIFICATION
+                    application.controller.toast.add(
+                        TOAST.TYPES.INFORMATION,
+                        "Sending message...",
+                        undefined,
+                        application
+                    );
 
                     const {
                         context
@@ -441,6 +469,8 @@ class Application {
                         email,
                         message
                     } = application.state.modal.form ?? {};
+
+                    application.state.messaging = true;
 
                     window.grecaptcha.ready(() => {
                         window.grecaptcha.execute('6LfioiorAAAAANenh3jIPGMmgZNVmwFHLp87jgDK', { action: 'CONTACT' }).then((google_recaptcha_token) => {
@@ -456,10 +486,34 @@ class Application {
                                     context,
                                     google_recaptcha_token
                                 })
+                            }).then(response => {
+                                if (!response.ok) throw response;
+
+                                return response.json();
                             }).then(data => {
-                                // TODO : POP TOAST - SUCCESS
-                            }).catch(error => {
-                                // TODO : POP TOAST - FAILURE
+                                application.state.messaging = false;
+
+                                application.controller.modal.close(application);
+
+                                application.controller.toast.add(
+                                    TOAST.TYPES.SUCCESS,
+                                    data.message,
+                                    undefined,
+                                    application
+                                );
+                            }).catch(async error => {
+                                application.state.messaging = false;
+
+                                application.controller.modal.form.reset(application);
+
+                                const data = await error.json();
+
+                                application.controller.toast.add(
+                                    TOAST.TYPES.ERROR,
+                                    data.message,
+                                    undefined,
+                                    application
+                                );
                             });
                         });
                     });
@@ -468,12 +522,39 @@ class Application {
                     application.state.modal.opened = false;
                     application.state.modal.context = '';
                     application.state.modal.placeholder_for_message = '';
-                    application.state.modal.form.name = '';
-                    application.state.modal.form.email = '';
-                    application.state.modal.form.message = '';
+                    application.controller.modal.form.reset(application);
+                },
+                form: {
+                    reset: (application) => {
+                        application.state.modal.form.name = '';
+                        application.state.modal.form.email = '';
+                        application.state.modal.form.message = '';
+                    },
+                    validate: (application) => {
+                        const {
+                            form
+                        } = application.state.modal;
+
+                        const name = form.name.trim();
+                        const email = form.email.trim();
+                        const message = form.message.trim();
+
+                        const email_is_valid = /\S+@\S+\.\S+/.test(email);
+
+                        if(
+                            name &&
+                            email &&
+                            message &&
+                            email_is_valid
+                        ) {
+                            application.state.modal.form.is_valid = true;
+                        } else {
+                            application.state.modal.form.is_valid = false
+                        }
+                    }
                 },
                 open_for_resume: (application) => {
-                    application.state.modal.placeholder_for_message = "Help me understand how I can help, and I'll have that resume on its way!";
+                    application.state.modal.placeholder_for_message = "Before I send my resume over, please provide some more information on how I can help!";
                     application.state.modal.context = RESUME;
                     application.state.modal.opened = true;
 
@@ -488,6 +569,38 @@ class Application {
                     application.state.modal.context = OPPORTUNITY;
                     application.state.modal.opened = true;
                 },
+            },
+            toast: {
+                add: (
+                    type,
+                    message,
+                    time_to_live = 4000,
+                    application
+                ) => {
+                    const id = Date.now();
+
+                    const toast = {
+                        id: Date.now(),
+                        type,
+                        message,
+                        class: determine_toast_class(type)
+                    };
+
+                    application.state.toasts.push(toast);
+
+                    window.setTimeout(() => {
+                        application.controller.toast.remove(
+                            id,
+                            application
+                        );
+                    }, time_to_live);
+                },
+                remove: (
+                    id,
+                    application
+                ) => {
+                    application.state.toasts = application.state.toasts.filter(toast => toast.id !== id);
+                }
             }
         }
     })
