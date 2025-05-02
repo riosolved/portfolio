@@ -3,6 +3,7 @@ package handlers
 import (
 	"net/http"
 	"encoding/json"
+	"riosolved/server/api/utilities"
 )
 
 type Application_Response_Payload struct {
@@ -13,7 +14,7 @@ func Application(
 	writer http.ResponseWriter,
 	request *http.Request,
 ) {
-	// TODO : IMPLEMENT CORS MIDDLEWARE
+	utilities.CORS(writer, request)
 
 	if request.Method != http.MethodGet {
 		http.Error(writer, "Invalid request method", http.StatusMethodNotAllowed)

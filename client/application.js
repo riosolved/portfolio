@@ -411,14 +411,13 @@ class Application {
                 },
                 footer: (application) => {
                     Promise.all([
-                        fetch('https://raw.githubusercontent.com/riosolved/portfolio/main/package.json').then(res => res.json()),
+                        fetch('https://raw.githubusercontent.com/riosolved/portfolio/main/client/package.json').then(res => res.json()),
                         fetch('https://api.github.com/repos/riosolved/portfolio/commits').then(res => res.json()),
                     ]).then((data = []) => {
                         const [
                             Information,
                             commits
                         ] = data;
-
 
                         const latest_commit = commits[0];
                         const sha = latest_commit.sha.substring(0, 7);
@@ -429,6 +428,10 @@ class Application {
             },
             modal: {
                 submit: (application) => {
+                    application.controller.modal.close(application);
+
+                    // TODO : POP TOAST - NOTIFICATION
+
                     const {
                         context
                     } = application.state.modal ?? {};
@@ -439,8 +442,8 @@ class Application {
                         message
                     } = application.state.modal.form ?? {};
 
-                    grecaptcha.ready(() => {
-                        grecaptcha.execute('6LfioiorAAAAANenh3jIPGMmgZNVmwFHLp87jgDK', { action: 'LOGIN' }).then((token) => {
+                    window.grecaptcha.ready(() => {
+                        window.grecaptcha.execute('6LfioiorAAAAANenh3jIPGMmgZNVmwFHLp87jgDK', { action: 'CONTACT' }).then((google_recaptcha_token) => {
                             fetch(`${__environment_variables__.API}/contact`, { // NOTE : Value of "__API__" is defined in "vite.configuration.development" - string is overwritten on build of client.
                                 method: 'POST',
                                 headers: {
@@ -451,7 +454,7 @@ class Application {
                                     email,
                                     message,
                                     context,
-                                    token
+                                    google_recaptcha_token
                                 })
                             }).then(data => {
                                 // TODO : POP TOAST - SUCCESS

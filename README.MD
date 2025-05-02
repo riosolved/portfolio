@@ -5,4 +5,4 @@ Execute the following within /client
 
 Server:
 Execute the following within /server
-> go run main.go
+> GOOGLE_APPLICATION_PASSWORD="..." RECAPTCHA_V3_SECRET="..." ENVIRONMENT="development" go run main.go

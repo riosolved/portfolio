@@ -1,7 +1,5 @@
 NOW
-- Update Resume.
-- Implement new Resume.
+- Contact form validation, disable submit until all required fields are provided.
 
 LATER
-- Modal for "employability" component. (requires API)
-- Implement an API.
+- ...
