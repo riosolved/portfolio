@@ -529,28 +529,27 @@ class Application {
                         application.state.modal.form.name = '';
                         application.state.modal.form.email = '';
                         application.state.modal.form.message = '';
+                        application.state.modal.form.is_valid = false;
                     },
                     validate: (application) => {
                         const {
                             form
                         } = application.state.modal;
 
-                        const name = form.name.trim();
-                        const email = form.email.trim();
-                        const message = form.message.trim();
+                        const name = form.name;
+                        const email = form.email;
+                        const message = form.message;
 
                         const email_is_valid = /\S+@\S+\.\S+/.test(email);
 
-                        if(
+                        const is_valid = (
                             name &&
                             email &&
                             message &&
                             email_is_valid
-                        ) {
-                            application.state.modal.form.is_valid = true;
-                        } else {
-                            application.state.modal.form.is_valid = false
-                        }
+                        );
+
+                        application.state.modal.form.is_valid = is_valid;
                     }
                 },
                 open_for_resume: (application) => {
