@@ -46,8 +46,9 @@ gcloud functions deploy "$FUNCTION_NAME" \
   --runtime go122 \
   --trigger-http \
   --entry-point="F" \
-  --source . \
+  --source "./server" \
   --allow-unauthenticated
+
 
 # gcloud functions deploy "$FUNCTION_NAME" \
 #     --region="$REGION" \
