@@ -2,7 +2,7 @@ package main
 
 import (
 	"github.com/GoogleCloudPlatform/functions-framework-go/functions"
-	"github.com/riosolved/portfolio/server/api/handlers"
+	"github.com/riosolved/portfolio/tree/main/server/handlers"
 )
 
 func init () {
