@@ -1,6 +1,5 @@
 NOW
-- /api/contact - Return early on not enough information provided.
+- Implement secret manager, for sourcing secrets in production invocation.
 
 LATER
-- /api/contact - Update failure messages to flow to client.
 - Rate limiting.
