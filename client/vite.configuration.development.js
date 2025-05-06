@@ -10,6 +10,7 @@ export default defineConfig({
         server.watcher.on('change', (file) => {
           if (file.endsWith('/public/index.css')) {
             console.log('public/index.css changed, reloading...');
+
             server.ws.send({
               type: 'full-reload',
             });
@@ -28,7 +29,7 @@ export default defineConfig({
             break;
           }
           case 'production': {
-            file = '.env.development';
+            file = '.env.production';
             break;
           }
           default: {

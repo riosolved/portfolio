@@ -473,7 +473,7 @@ class Application {
                     application.state.messaging = true;
 
                     window.grecaptcha.ready(() => {
-                        window.grecaptcha.execute('6LfioiorAAAAANenh3jIPGMmgZNVmwFHLp87jgDK', { action: 'CONTACT' }).then((google_recaptcha_token) => {
+                        window.grecaptcha.execute('6LeKyCsrAAAAAD04QXcvj69so_MSik23evRFDs8U', { action: 'CONTACT' }).then((google_recaptcha_token) => {
                             fetch(`${__environment_variables__.API}/contact`, { // NOTE : Value of "__API__" is defined in "vite.configuration.development" - string is overwritten on build of client.
                                 method: 'POST',
                                 headers: {
