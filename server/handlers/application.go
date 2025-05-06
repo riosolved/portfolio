@@ -3,7 +3,7 @@ package handlers
 import (
 	"net/http"
 	"encoding/json"
-	"riosolved/server/api/utilities"
+	"github.com/riosolved/portfolio/server/api/utilities"
 )
 
 type Application_Response_Payload struct {

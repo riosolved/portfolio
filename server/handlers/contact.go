@@ -5,7 +5,7 @@ import (
 	"log"
 	"net/http"
 	"encoding/json"
-	"riosolved/server/api/utilities"
+	"github.com/riosolved/portfolio/server/api/utilities"
 	"fmt"
 	"strings"
 )

@@ -1,20 +1,19 @@
-package api
+package handlers
 
 import (
 	"net/http"
 	"strings"
-	"riosolved/server/api/handlers"
 )
 
-func Initialize(
+func API(
 	writer http.ResponseWriter,
 	request *http.Request,
 ) {
 	switch {
 	case strings.HasPrefix(request.URL.Path, "/api/contact"):
-		handlers.Contact(writer, request)
+		Contact(writer, request)
 	case strings.HasPrefix(request.URL.Path, "/api/application"):
-		handlers.Application(writer, request)
+		Application(writer, request)
 	default:
 		http.NotFound(writer, request)
 	}

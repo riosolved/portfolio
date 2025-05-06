@@ -3,11 +3,11 @@ package main
 import (
 	"log"
 	"net/http"
-	"riosolved/server/api"
+	"github.com/riosolved/portfolio/server/api/handlers"
 )
 
 func main() {
-	http.HandleFunc("/", api.Initialize)
+	http.HandleFunc("/", handlers.API)
 
 	log.Println("Running on :8080...")
 
