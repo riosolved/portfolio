@@ -386,11 +386,11 @@ class Application {
 
                         if (steps > 0) {
                             if (element.scrollTop + element.clientHeight >= element.scrollHeight) {
-                                setTimeout(() => {
+                                window.setTimeout(() => {
                                     element.scrollTop = 0;
                                     scroll_about_last_timestamp = null;
                                     scroll_about_accumulated_time = 0;
-                                }, 1000);
+                                }, 2500);
                             } else {
                                 element.scrollTop += units;
 

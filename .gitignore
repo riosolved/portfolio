@@ -2,3 +2,4 @@
 /client/.env*
 /client/dist
 /server/.env*
+/server/source.zip

@@ -1,10 +1,10 @@
-package main
+package function
 
 import (
 	"github.com/GoogleCloudPlatform/functions-framework-go/functions"
-	"github.com/riosolved/portfolio/tree/main/server/handlers"
+	"riosolved.com/api/handlers"
 )
 
-func init () {
+func init() {
 	functions.HTTP("API", handlers.API)
 }

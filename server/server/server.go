@@ -3,7 +3,7 @@ package main
 import (
 	"log"
 	"net/http"
-	"github.com/riosolved/portfolio/tree/main/server/handlers"
+	"riosolved.com/api/handlers"
 )
 
 func main() {

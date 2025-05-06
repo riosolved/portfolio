@@ -13,4 +13,5 @@ Google Cloud Platform
 
 Server:
 Execute the following within /server
-> GOOGLE_APPLICATION_PASSWORD="..." RECAPTCHA_V3_SECRET="..." ENVIRONMENT="development" go run serve.go
+> cd ./server/source/server/server
+> GOOGLE_APPLICATION_PASSWORD="..." RECAPTCHA_V3_SECRET="..." ENVIRONMENT="development" go run server.go
