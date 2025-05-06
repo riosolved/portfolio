@@ -1,4 +1,4 @@
-module github.com/riosolved/portfolio/server
+module github.com/riosolved/portfolio
 
 go 1.22.2
 
