@@ -1,8 +1,9 @@
-const SCROLL_SPEED = 0.05;
+const SCROLL_SPEED = 0.015;
 const PADDING = 40;
 
 export default class Logoer {
     scrollX = PADDING;
+    last_update = 0;
 
     logos = {
         discover: {
@@ -62,7 +63,7 @@ export default class Logoer {
 
         let x = -scrollX;
 
-        // Draw logos repeatedly across canvas
+        // NOTE : Draw logos repeatedly across canvas
         while (x < this.canvas.width) {
             this.list.forEach(logo => {
                 const { image, scale = 1, offset } = this.logos[logo] ?? {};
@@ -97,10 +98,12 @@ export default class Logoer {
         this.context.globalCompositeOperation = "source-over";
     }
 
-    update = () => {
-        scrollX += SCROLL_SPEED;
+    update = (timestamp) => {
+        const delta = (timestamp - this.last_update);
 
-        // Reset scroll to loop infinitely
+        scrollX += SCROLL_SPEED * delta;
+
+        // NOTE : Reset scroll to loop infinitely
         const totalWidth = this.list.reduce((sum, key) => {
             const logo = this.logos[key];
 
@@ -115,6 +118,8 @@ export default class Logoer {
 
         this.draw();
 
+        this.last_update = timestamp;
+
         requestAnimationFrame(this.update);
     }
 
@@ -127,7 +132,9 @@ export default class Logoer {
 
             if (!this.canvas) return;
 
-            this.loadLogos().then(this.update);
+            this.loadLogos().then(() => {
+                requestAnimationFrame(this.update);
+            });
         } catch (error) {
             console.warn('LOGOER::Unable to initialize.')
         }

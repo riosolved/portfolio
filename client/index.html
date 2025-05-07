@@ -12,14 +12,13 @@
 
 <body>
     <div x-data="application" id="application">
-        <section class="h-screen flex flex-col items-center" id="main">
+        <section class="flex flex-col items-center" id="main">
             <div class="w-[369px] flex flex-col" id="profile" x-cloak>
                 <div class="flex flex-col" id="header">
                     <pre
                         class="name ascii">                           _ _           __ _           <br>  /\  /\___ _ __ __ _  ___| (_) ___     /__(_) ___  ___ <br> / /_/ / _ \ '__/ _` |/ __| | |/ _ \   / \// |/ _ \/ __|<br>/ __  /  __/ | | (_| | (__| | | (_) | / _  \ | (_) \__ \<br>\/ /_/ \___|_|  \__,_|\___|_|_|\___/  \/ \_/_|\___/|___/</pre>
 
-                    <pre
-                        class="break first ascii">--------------------------------------------------------</pre>
+                    <pre class="break first ascii">--------------------------------------------------------</pre>
 
                     <div class="flex flex-row items-center">
                         <div class="flex flex-1 flex-col">
@@ -34,18 +33,16 @@
                                 GitHub
                             </a>
 
-                            <a href="https://www.linkedin.com/in/riosolved" title="LinkedIn"
-                                rel="noopener noreferrer" target="_blank">
+                            <a href="https://www.linkedin.com/in/riosolved" title="LinkedIn" rel="noopener noreferrer"
+                                target="_blank">
                                 LinkedIn
                             </a>
 
-                            <a title="Resume"
-                                @click="application.controller.modal.open_for_resume(application)">
+                            <a title="Resume" @click="application.controller.modal.open_for_resume(application)">
                                 Resume
                             </a>
 
-                            <a title="Contact"
-                                @click="application.controller.modal.open_for_contact(application)">
+                            <a title="Contact" @click="application.controller.modal.open_for_contact(application)">
                                 Contact
                             </a>
                         </div>
@@ -212,4 +209,5 @@
     <script type="module" src="/application.js"></script>
     <script type="module" src="/alpine.js"></script>
 </body>
+
 </html>
