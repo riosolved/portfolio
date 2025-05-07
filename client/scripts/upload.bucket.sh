@@ -22,5 +22,6 @@ fi
 gsutil web set -m index.html "gs://${BUCKET_NAME}"
 gsutil -m rsync -R "$SOURCE_DIRECTORY" "gs://${BUCKET_NAME}"
 gsutil iam ch allUsers:objectViewer "gs://${BUCKET_NAME}"
+gsutil -m setmeta -r -h "Cache-Control:no-cache, max-age=0" "gs://${BUCKET_NAME}/**"
 
 echo "Client has been deployed to bucket."

@@ -1,6 +1,4 @@
 #!/usr/bin/env bash
-set -e
-
 cd "$(dirname "$0")/../"
 
 PROJECT_ID="riosolved-458703"
@@ -42,11 +40,8 @@ gcloud run deploy "$FUNCTION_NAME" \
   --function API \
   --base-image go122 \
   --allow-unauthenticated \
-  --set-env-vars ENVIRONMENT=production
-
-# TODO : PULL SECRETS FOR
-# - GOOGLE_APPLICATION_PASSWORD="..."
-# - RECAPTCHA_V3_SECRET="..."
+  --set-env-vars ENVIRONMENT=production \
+  --set-secrets="GOOGLE_APPLICATION_PASSWORD=GOOGLE_APPLICATION_PASSWORD:latest,RECAPTCHA_V3_SECRET=RECAPTCHA_V3_SECRET:latest"
 
 # == SERVERLESS NETWORK ENDPOINT GROUP
 if ! gcloud compute network-endpoint-groups describe "$NETWORK_ENDPOINT_GROUP_NAME" --region="$REGION" --format="get(name)" 2>/dev/null ; then
@@ -77,16 +72,13 @@ else
 fi
 
 # == URL MAP PATH RULE (CREATED IN CLIENT DEPLOYMENT) ==
-# gcloud compute url-maps remove-path-matcher "riosolved-url-map" --path-matcher-name="api-matcher"
-{
-    gcloud compute url-maps add-path-matcher "$URL_MAP_NAME" \
+gcloud compute url-maps remove-path-matcher "riosolved-url-map" --path-matcher-name="api-matcher"
+
+gcloud compute url-maps add-path-matcher "$URL_MAP_NAME" \
     --path-matcher-name="api-matcher" \
     --default-backend-bucket="$BACKEND_BUCKET_NAME" \
     --path-rules="/api/*=$BACKEND_SERVICE" \
     --new-hosts="www.riosolved.com"
-} || {
-    echo "Cannot create a new host rule with host [www.riosolved.com] because the host is already part of a host rule that references the path matcher [api-matcher]."
-}
 
 gcloud compute target-https-proxies update "$HTTPS_PROXY_NAME" \
     --url-map="$URL_MAP_NAME"
