@@ -369,14 +369,14 @@ html, body {
 }
 #main #story {
   z-index: 1;
-  font-size: 0.75rem;
+  max-width: 500px;
   display: grid;
-  grid-template-columns: 1fr 1fr;
   gap: 1rem;
   padding: 0px 32px;
 }
 #story span {
   user-select: none;
+  font-size: 0.75rem;
   font-family: 'UbuntuMono';
   color: #F5F5F5;
   text-align: justify;
