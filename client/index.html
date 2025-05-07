@@ -15,8 +15,10 @@
         <section class="flex flex-col items-center" id="main">
             <div class="w-[369px] flex flex-col" id="profile" x-cloak>
                 <div class="flex flex-col" id="header">
-                    <pre
-                        class="name ascii">                           _ _           __ _           <br>  /\  /\___ _ __ __ _  ___| (_) ___     /__(_) ___  ___ <br> / /_/ / _ \ '__/ _` |/ __| | |/ _ \   / \// |/ _ \/ __|<br>/ __  /  __/ | | (_| | (__| | | (_) | / _  \ | (_) \__ \<br>\/ /_/ \___|_|  \__,_|\___|_|_|\___/  \/ \_/_|\___/|___/</pre>
+                    <div class="flex justify-center">
+                        <pre
+                            class="name ascii">                           _ _           __ _           <br>  /\  /\___ _ __ __ _  ___| (_) ___     /__(_) ___  ___ <br> / /_/ / _ \ '__/ _` |/ __| | |/ _ \   / \// |/ _ \/ __|<br>/ __  /  __/ | | (_| | (__| | | (_) | / _  \ | (_) \__ \<br>\/ /_/ \___|_|  \__,_|\___|_|_|\___/  \/ \_/_|\___/|___/</pre>
+                    </div>
 
                     <pre class="break first ascii">--------------------------------------------------------</pre>
 
@@ -197,7 +199,9 @@
 
             <div class="flex flex-col items-end">
                 <div class="flex flex-row items-center">
-                    <span class="text-[1rem] mr-[5px]">©</span> <span
+                    <span class="copyright symbol">©</span>
+
+                    <span
                         x-data="{ copyright: `${new Date().getFullYear()} - Heraclio Rios` }" x-text="copyright"></span>
                 </div>
 

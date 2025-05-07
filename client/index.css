@@ -55,7 +55,7 @@ body,
 
 .ascii {
     line-height: 1.15;
-    font-size: 12px;
+    font-size: 0.75rem;
     color: cornsilk;
     overflow-y: hidden;
     text-align: left !important;
@@ -63,6 +63,12 @@ body,
     display: inline-block !important;
     font-family: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
     user-select: none;
+}
+
+@media (min-resolution: 2dppx) {
+    .name.ascii {
+        font-size: 0.65rem;
+    }
 }
 
 .name.holder {
@@ -367,9 +373,31 @@ body,
     padding: 8px 16px;
 }
 
+#footer .copyright.symbol {
+    font-size: 1rem;
+    line-height: 0px;
+    margin-right: 5px;
+}
+
 @media (max-width: 640px) {
     #footer {
         font-size: 0.65rem;
+    }
+
+    #footer .copyright.symbol {
+        font-size: 0.8rem;
+    }
+}
+
+@media (min-resolution: 2dppx) {
+    #footer {
+        font-size: 0.45rem;
+    }
+
+    #footer .copyright.symbol {
+        margin-right: 2px;
+        font-size: 0.6rem;
+        line-height: 1px;
     }
 }
 
