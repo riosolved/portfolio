@@ -88,47 +88,8 @@ body {
     padding-top: 4px;
 }
 
-#panel {
-    max-width: 369px;
-}
-
-#about.holder {
-    position: relative;
-    margin-bottom: 15px;
+#main {
     overflow: hidden;
-    font-size: 0.75rem;
-}
-
-#about #story {
-    height: 150px;
-    padding-top: 64px;
-    padding-bottom: 64px;
-    overflow: hidden;
-    overflow-y: scroll;
-}
-
-#about #story.collapsed {
-    overflow: hidden;
-    -webkit-mask-image: linear-gradient(to bottom,
-            rgba(0, 0, 0, 0) 0%,
-            rgba(0, 0, 0, 0.5) 10%,
-            rgba(0, 0, 0, 1) 20%,
-            rgba(0, 0, 0, 1) 80%,
-            rgba(0, 0, 0, 0.5) 90%,
-            rgba(0, 0, 0, 0) 100%);
-    mask-image: linear-gradient(to bottom,
-            rgba(0, 0, 0, 0) 0%,
-            rgba(0, 0, 0, 0.5) 10%,
-            rgba(0, 0, 0, 1) 20%,
-            rgba(0, 0, 0, 1) 80%,
-            rgba(0, 0, 0, 0.5) 90%,
-            rgba(0, 0, 0, 0) 100%);
-}
-
-#about span {
-    user-select: none;
-    font-family: 'UbuntuMono';
-    color: #F5F5F5;
 }
 
 #main #profile {
@@ -152,6 +113,21 @@ body {
     z-index: 1;
     width: 100%;
     overflow: hidden;
+}
+
+#main #story {
+    z-index: 1;
+    font-size: 0.75rem;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    padding: 0px 32px;
+}
+
+#story span {
+    user-select: none;
+    font-family: 'UbuntuMono';
+    color: #F5F5F5;
 }
 
 #navigation {
@@ -340,15 +316,18 @@ body {
 }
 
 #capabilities {
-    margin-bottom: 5px;
+    margin-top: 5px;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: repeat(2, auto);
+    gap: 0.5rem;
+    width: 100%;
 }
 
 #capabilities .capability {
     display: inline-block;
     cursor: pointer;
     background: #30303026;
-    margin: 0px 5px;
-    min-width: 75px;
     padding: 4px 8px;
     text-align: center;
     font-size: 0.55rem;
@@ -369,13 +348,14 @@ body {
 }
 
 #skills {
-    width: 500px;
-    min-height: 50px;
+    min-height: 75px;
     text-align: center;
     color: #00ff2b;
     font-family: 'Kode_Mono';
     font-size: 0.75rem;
     line-height: 1.5rem;
+    display: flex;
+    align-items: center;
 }
 
 #footer {

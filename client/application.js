@@ -238,9 +238,6 @@ class Application {
     alpine = ({
         state: {
             route: '/home',
-            about: {
-                collapsed: true,
-            },
             messaging: false,
             capabilities: [
                 {
@@ -325,11 +322,11 @@ class Application {
             },
             skills: (capability, application) => {
                 if (!capability) return -1;
-                if (!application) return -1;
+                if (!application) return -2;
 
                 application.state.capability = capability;
 
-                const skills = skills_by_capabilities[capability].map(skill => `<u>${(skill?.label ?? '').toUpperCase()}</u>`);
+                const skills = skills_by_capabilities[capability].map(skill => skill.label);
 
                 switch (skills.length) {
                     case 0: {
@@ -348,14 +345,11 @@ class Application {
                     }
                 }
             },
-            toggle_expand_about: (application) => {
-                application.state.about.collapsed = !application.state.about.collapsed;
-            },
             initialize: {
                 capabilities: (application) => {
                     application.controller.skills(LANGUAGES, application);
                 },
-                scroll_about: () => {
+                scroll_about: () => { // TODO : DEPRECATE
                     let id,
                         animating = false,
                         scroll_about_last_timestamp = null,
@@ -506,11 +500,15 @@ class Application {
 
                                 application.controller.modal.form.reset(application);
 
-                                const data = await error.json();
+                                let data = {};
+
+                                try {
+                                    data = await error.json();
+                                } catch (error) {}
 
                                 application.controller.toast.add(
                                     TOAST.TYPES.ERROR,
-                                    data.message,
+                                    data?.message ?? 'Unexpected error occurred.',
                                     undefined,
                                     application
                                 );
