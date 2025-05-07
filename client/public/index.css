@@ -379,6 +379,7 @@ html, body {
   user-select: none;
   font-family: 'UbuntuMono';
   color: #F5F5F5;
+  text-align: justify;
 }
 #navigation {
   background: #0000006e;
