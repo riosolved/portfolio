@@ -12,66 +12,62 @@
 <body>
     <div x-data="application" id="application">
         <section class="h-screen flex flex-col items-center" id="main">
-            <div class="w-[369px] flex flex-col" x-cloak>
-                <div class="flex flex-col items-center justify-center" id="profile">
-                    <div class="flex flex-col" id="panel">
-                        <div class="flex flex-col" id="header">
-                            <pre
-                                class="name ascii">                           _ _           __ _           <br>  /\  /\___ _ __ __ _  ___| (_) ___     /__(_) ___  ___ <br> / /_/ / _ \ '__/ _` |/ __| | |/ _ \   / \// |/ _ \/ __|<br>/ __  /  __/ | | (_| | (__| | | (_) | / _  \ | (_) \__ \<br>\/ /_/ \___|_|  \__,_|\___|_|_|\___/  \/ \_/_|\___/|___/</pre>
+            <div class="w-[369px] flex flex-col" id="profile" x-cloak>
+                <div class="flex flex-col" id="header">
+                    <pre
+                        class="name ascii">                           _ _           __ _           <br>  /\  /\___ _ __ __ _  ___| (_) ___     /__(_) ___  ___ <br> / /_/ / _ \ '__/ _` |/ __| | |/ _ \   / \// |/ _ \/ __|<br>/ __  /  __/ | | (_| | (__| | | (_) | / _  \ | (_) \__ \<br>\/ /_/ \___|_|  \__,_|\___|_|_|\___/  \/ \_/_|\___/|___/</pre>
 
-                            <pre
-                                class="break first ascii">--------------------------------------------------------</pre>
+                    <pre
+                        class="break first ascii">--------------------------------------------------------</pre>
 
-                            <div class="flex flex-row items-center">
-                                <div class="flex flex-1 flex-col">
-                                    <span class="title">
-                                        SOFTWARE ENGINEER
-                                    </span>
-                                </div>
-
-                                <div id="items">
-                                    <a href="https://github.com/riosolved" title="GitHub" rel="noopener noreferrer"
-                                        target="_blank">
-                                        GitHub
-                                    </a>
-
-                                    <a href="https://www.linkedin.com/in/riosolved" title="LinkedIn"
-                                        rel="noopener noreferrer" target="_blank">
-                                        LinkedIn
-                                    </a>
-
-                                    <a title="Resume"
-                                        @click="application.controller.modal.open_for_resume(application)">
-                                        Resume
-                                    </a>
-
-                                    <a title="Contact"
-                                        @click="application.controller.modal.open_for_contact(application)">
-                                        Contact
-                                    </a>
-                                </div>
-                            </div>
-
-                            <pre class="break ascii">--------------------------------------------------------</pre>
+                    <div class="flex flex-row items-center">
+                        <div class="flex flex-1 flex-col">
+                            <span class="title">
+                                SOFTWARE ENGINEER
+                            </span>
                         </div>
 
-                        <div class="flex flex-row">
-                            <img class="w-16 h-16 image" src="/rios.jpg" title="profile" />
+                        <div id="items">
+                            <a href="https://github.com/riosolved" title="GitHub" rel="noopener noreferrer"
+                                target="_blank">
+                                GitHub
+                            </a>
 
-                            <div class="flex flex-col">
-                                <p class="blurb">
-                                    7+ YEARS OF INDUSTRY EXPERIENCE
-                                </p>
+                            <a href="https://www.linkedin.com/in/riosolved" title="LinkedIn"
+                                rel="noopener noreferrer" target="_blank">
+                                LinkedIn
+                            </a>
 
-                                <div class="logos holder">
-                                    <canvas id="logos" width="300" height="54"></canvas>
-                                </div>
-                            </div>
+                            <a title="Resume"
+                                @click="application.controller.modal.open_for_resume(application)">
+                                Resume
+                            </a>
+
+                            <a title="Contact"
+                                @click="application.controller.modal.open_for_contact(application)">
+                                Contact
+                            </a>
+                        </div>
+                    </div>
+
+                    <pre class="break ascii">--------------------------------------------------------</pre>
+                </div>
+
+                <div class="flex flex-row">
+                    <img class="w-16 h-16 image" src="/rios.jpg" title="profile" />
+
+                    <div class="flex flex-col flex-1">
+                        <p class="blurb">
+                            7+ YEARS OF INDUSTRY EXPERIENCE
+                        </p>
+
+                        <div class="logos holder">
+                            <canvas id="logos" width="300" height="54"></canvas>
                         </div>
                     </div>
                 </div>
 
-                <div class="flex flex-col items-center" id="content">
+                <div class="flex flex-col items-center">
                     <div id="capabilities" x-init="application.controller.initialize.capabilities(application)">
                         <template x-for="capability in application.state.capabilities" :key="capability.label">
                             <div class="capability" @click="application.controller.skills(capability.key, application)"

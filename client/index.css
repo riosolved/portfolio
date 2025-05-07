@@ -96,11 +96,6 @@ body {
     z-index: 1;
 }
 
-#main #profile .image {
-    margin-right: 3px;
-    margin-left: 1px;
-}
-
 #main #profile .blurb {
     font-family: 'Monoid';
     font-size: 0.5rem;
@@ -109,18 +104,11 @@ body {
     line-height: 10px;
 }
 
-#main #content {
-    z-index: 1;
-    width: 100%;
-    overflow: hidden;
-}
-
 #main #story {
     z-index: 1;
-    max-width: 500px;
+    max-width: 650px;
     display: grid;
     gap: 1rem;
-    padding: 0px 32px;
 }
 
 #story span {
