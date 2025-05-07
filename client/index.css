@@ -114,26 +114,29 @@ body,
 }
 
 #main #story {
+    position: relative;
     z-index: 1;
-    display: grid;
-    max-width: 900px;
-    grid-template-columns: 1fr 1fr;
-    gap: 2rem;
-    padding: 0px 32px;
-}
-
-@media (max-width: 640px) {
-    #main #story {
-        grid-template-columns: 1fr;
-    }
+    height: 100%;
+    width: 500px;
+    padding: 0 16px;
+    margin: 0;
+    overflow: hidden;
 }
 
 #story span {
     user-select: none;
-    font-size: 0.75rem;
+    font-size: 1rem;
     font-family: 'UbuntuMono';
     color: #F5F5F5;
     text-align: justify;
+}
+
+@media (min-resolution: 2dppx) {
+    #main #story {
+        overflow-y: scroll;
+        width: 100%;
+        margin-bottom: 60px;
+    }
 }
 
 #navigation {

@@ -46,16 +46,19 @@ const skills_by_capabilities = {
     ],
     [CLIENT]: [
         {
-            label: 'Bootstrap'
+            label: 'Material UI'
         },
         {
-            label: 'Less'
+            label: 'Bootstrap'
         },
         {
             label: 'Tailwind'
         },
         {
-            label: 'Sass'
+            label: 'SASS'
+        },
+        {
+            label: 'LESS'
         },
         {
             label: 'CSS'
@@ -67,6 +70,9 @@ const skills_by_capabilities = {
             label: 'HTMX'
         },
         {
+            label: 'Vue.js'
+        },
+        {
             label: 'Angular'
         },
         {
@@ -74,9 +80,6 @@ const skills_by_capabilities = {
         },
         {
             label: 'React Native'
-        },
-        {
-            label: 'Vue.js'
         },
     ],
     [SERVER]: [
@@ -162,6 +165,12 @@ const skills_by_capabilities = {
         },
         {
             label: 'Mocha',
+        },
+        {
+            label: 'Chai',
+        },
+        {
+            label: 'Karma',
         },
         {
             label: 'Jest',
