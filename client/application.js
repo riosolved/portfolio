@@ -76,7 +76,16 @@ const skills_by_capabilities = {
             label: 'Angular'
         },
         {
+            label: 'NGRX'
+        },
+        {
             label: 'React'
+        },
+        {
+            label: 'Redux'
+        },
+        {
+            label: 'Thunk'
         },
         {
             label: 'React Native'
